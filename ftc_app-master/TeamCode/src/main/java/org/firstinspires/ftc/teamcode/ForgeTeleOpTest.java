@@ -107,6 +107,42 @@ public class ForgeTeleOpTest extends OpMode{
         // Send telemetry message to signify robot running;
         telemetry.addData("left",  "%.2f", left);
         telemetry.addData("right", "%.2f", right);
+
+        if (gamepad1.right_bumper)
+        {
+            openGlyphGrabber();
+        }
+
+        if (gamepad1.left_bumper)
+        {
+            halfGlyphGrabber();
+        }
+        if (gamepad1.x)
+        {
+            closeGlyphGrabber();
+        }
+    }
+
+
+
+    private void openGlyphGrabber()
+    {
+        robot.ggRight.setPosition(1);
+        robot.ggLeft.setPosition(0);
+
+    }
+    private void closeGlyphGrabber()
+    {
+        robot.ggRight.setPosition(0);
+        robot.ggLeft.setPosition(1);
+
+    }
+
+    private void halfGlyphGrabber()
+    {
+        robot.ggRight.setPosition(.5);
+        robot.ggLeft.setPosition(.5);
+
     }
 
     /*
@@ -115,6 +151,8 @@ public class ForgeTeleOpTest extends OpMode{
     @Override
     public void stop()
     {
-
+        robot.ggRight.setPosition(0);
+        robot.ggLeft.setPosition(1);
     }
+
 }

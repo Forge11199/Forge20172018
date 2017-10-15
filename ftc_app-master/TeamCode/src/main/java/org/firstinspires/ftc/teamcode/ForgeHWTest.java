@@ -29,6 +29,8 @@ public class ForgeHWTest {
         * Motor :  Back Right Drive Motor:         "back_right_drive"
         * Motor :  Back Left Drive Motor:          "back_left_drive"
         *
+        * Servo : Glyph Grabber Left:              "gg_Left"
+        * Servo : Glphy Grabber Right:             "gg_Right"
         */
 
     /* Define variables for hardware components. */
@@ -37,6 +39,9 @@ public class ForgeHWTest {
     public DcMotor backRightDrive   = null;
     public DcMotor backLeftDrive = null;
 
+   /* Glyph grabber mapping(gg) */
+    public Servo ggRight    = null;
+    public Servo ggLeft     = null;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -57,7 +62,8 @@ public class ForgeHWTest {
         frontLeftDrive = hwMap.get(DcMotor.class, "front_left_drive");
         backRightDrive= hwMap.get(DcMotor.class, "back_right_drive");
         backLeftDrive= hwMap.get(DcMotor.class, "back_left_drive");
-
+        ggLeft= hwMap.get(Servo.class, "gg_Left");
+        ggRight= hwMap.get(Servo.class, "gg_Right");
 
         frontRightDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
@@ -71,6 +77,12 @@ public class ForgeHWTest {
         backRightDrive.setPower(0);
         backLeftDrive.setPower(0);
 
+        //Set all servo to zero and another unknown number for the moment
+        ggLeft.setPosition(1);
+        ggRight.setPosition(0);
+
+
+
         //***** NEED TO CHANGE TO ENCODER *******
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -80,5 +92,7 @@ public class ForgeHWTest {
         backLeftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
+
+
 }
 
