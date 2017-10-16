@@ -42,6 +42,7 @@ public class ForgeHWTest {
    /* Glyph grabber mapping(gg) */
     public Servo ggRight    = null;
     public Servo ggLeft     = null;
+    public Servo gpServo    = null;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -64,6 +65,7 @@ public class ForgeHWTest {
         backLeftDrive= hwMap.get(DcMotor.class, "back_left_drive");
         ggLeft= hwMap.get(Servo.class, "gg_Left");
         ggRight= hwMap.get(Servo.class, "gg_Right");
+        gpServo= hwMap.get (Servo.class, "gp_Servo");
 
         frontRightDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
@@ -80,6 +82,7 @@ public class ForgeHWTest {
         //Set all servo to zero and another unknown number for the moment
         ggLeft.setPosition(1);
         ggRight.setPosition(0);
+        gpServo.setPosition(.95);
 
 
 

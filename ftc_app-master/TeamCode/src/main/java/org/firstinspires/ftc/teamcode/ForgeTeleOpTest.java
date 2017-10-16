@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * This file provides basic Telop driving for a Pushbot robot.
@@ -121,6 +122,21 @@ public class ForgeTeleOpTest extends OpMode{
         {
             closeGlyphGrabber();
         }
+
+        if (gamepad1.dpad_left)
+        {
+            offGlyphPusher();
+        }
+
+        if (gamepad1.dpad_down)
+        {
+            partialGlyphPusher();
+        }
+
+        if (gamepad1.dpad_up)
+        {
+            fullGlyphPusher();
+        }
     }
 
 
@@ -145,6 +161,53 @@ public class ForgeTeleOpTest extends OpMode{
 
     }
 
+    //Glyph pusher off position
+    private void offGlyphPusher()
+    {
+        robot.gpServo.setPosition(.95);
+    }
+
+    private void partialGlyphPusher()
+    {
+        int sleepTime = 500;
+        double startPos = .95;
+
+        robot.gpServo.setPosition(startPos);
+        sleep(sleepTime);
+        robot.gpServo.setPosition(.80);
+        sleep(sleepTime);
+        robot.gpServo.setPosition(.70);
+        sleep(sleepTime);
+        robot.gpServo.setPosition(.70);
+        sleep(sleepTime);
+        robot.gpServo.setPosition(.70);
+        sleep(sleepTime);
+        robot.gpServo.setPosition(startPos);
+    }
+
+    //Full wobble for glyph pusher
+    private void fullGlyphPusher()
+    {
+        int sleepTime = 500;
+        double startPos = .95;
+
+        robot.gpServo.setPosition(startPos);
+        sleep(sleepTime);
+        robot.gpServo.setPosition(.80);
+        sleep(sleepTime);
+        robot.gpServo.setPosition(startPos);
+        sleep(sleepTime);
+        robot.gpServo.setPosition(.70);
+        sleep(sleepTime);
+        robot.gpServo.setPosition(startPos);
+        sleep(sleepTime);
+        robot.gpServo.setPosition(.60);
+        robot.gpServo.setPosition(startPos);
+    }
+
+
+
+
     /*
      * Code to run ONCE after the driver hits STOP
      */
@@ -153,6 +216,22 @@ public class ForgeTeleOpTest extends OpMode{
     {
         robot.ggRight.setPosition(0);
         robot.ggLeft.setPosition(1);
+        robot.gpServo.setPosition(.95);
+    }
+
+    /**
+     * Sleeps for the given amount of milliseconds, or until the thread is interrupted. This is
+     * simple shorthand for the operating-system-provided {@link Thread#sleep(long) sleep()} method.
+     *
+     * @param milliseconds amount of time to sleep, in milliseconds
+     * @see Thread#sleep(long)
+     */
+    public final void sleep(long milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
 
 }
