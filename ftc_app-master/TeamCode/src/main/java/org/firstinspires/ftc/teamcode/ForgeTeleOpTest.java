@@ -109,33 +109,38 @@ public class ForgeTeleOpTest extends OpMode{
         telemetry.addData("left",  "%.2f", left);
         telemetry.addData("right", "%.2f", right);
 
-        if (gamepad1.right_bumper)
+        if (gamepad2.right_bumper)
         {
             openGlyphGrabber();
         }
 
-        if (gamepad1.left_bumper)
+        if (gamepad2.left_bumper)
         {
             halfGlyphGrabber();
         }
-        if (gamepad1.x)
+        if (gamepad2.x)
         {
             closeGlyphGrabber();
         }
 
-        if (gamepad1.dpad_left)
+        if (gamepad2.dpad_left)
         {
             offGlyphPusher();
         }
 
-        if (gamepad1.dpad_down)
+        if (gamepad2.dpad_down)
         {
             partialGlyphPusher();
         }
 
-        if (gamepad1.dpad_up)
+        if (gamepad2.dpad_up)
         {
             fullGlyphPusher();
+        }
+
+        if (gamepad2.dpad_right)
+        {
+            upGylphPusher ();
         }
     }
 
@@ -166,6 +171,8 @@ public class ForgeTeleOpTest extends OpMode{
     {
         robot.gpServo.setPosition(.95);
     }
+
+
 
     private void partialGlyphPusher()
     {
@@ -205,6 +212,11 @@ public class ForgeTeleOpTest extends OpMode{
         robot.gpServo.setPosition(startPos);
     }
 
+    //Up glyph pusher to knock off glyph pit glyphs
+    private void upGylphPusher()
+    {
+        robot.gpServo.setPosition(.30);
+    }
 
 
 
