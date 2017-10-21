@@ -109,35 +109,43 @@ public class ForgeTeleOpTest extends OpMode{
         telemetry.addData("left",  "%.2f", left);
         telemetry.addData("right", "%.2f", right);
 
+        //puts the glyph grabber in the start position; inside the robot
         if (gamepad2.right_bumper)
         {
             openGlyphGrabber();
         }
 
+        //opens the glyph grabber half way
         if (gamepad2.left_bumper)
         {
             halfGlyphGrabber();
         }
+
+        //closes it around the glyph
         if (gamepad2.x)
         {
             closeGlyphGrabber();
         }
 
+        //off position/down position for glyph pusher
         if (gamepad2.dpad_left)
         {
             offGlyphPusher();
         }
 
+        //1st level glyph pusher
         if (gamepad2.dpad_down)
         {
             partialGlyphPusher();
         }
 
+        //2nd level glyph pusher
         if (gamepad2.dpad_up)
         {
             fullGlyphPusher();
         }
 
+        //highest position for pushing glyphs into cryptobox
         if (gamepad2.dpad_right)
         {
             upGylphPusher ();
