@@ -32,19 +32,10 @@ package org.firstinspires.ftc.teamcode;
 import android.graphics.Color;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.SwitchableLight;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
-import java.util.Locale;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -73,9 +64,9 @@ import java.util.Locale;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Forge: Auto Drive By Encoder", group="Auto")
+@Autonomous(name="Forge Red: Auto Drive By Encoder ", group="Auto")
 
-public class ForgeAuto extends LinearOpMode {
+public class ForgeAutoRed extends LinearOpMode {
 
     /* Declare OpMode members. */
     ForgeHWTest         robot   = new ForgeHWTest();   // Use a Pushbot's hardware
@@ -171,7 +162,7 @@ public class ForgeAuto extends LinearOpMode {
         sleep(1000);
 
         // Blue Alliance
-        if (sensorColor.blue() > 13)
+        if (sensorColor.red() > 13)
         {
             robot.frontRightDrive.setPower(-.25);
             robot.frontLeftDrive.setPower(-.25);

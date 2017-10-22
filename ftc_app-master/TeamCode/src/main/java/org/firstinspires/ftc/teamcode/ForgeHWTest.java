@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.SwitchableLight;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -44,6 +47,13 @@ public class ForgeHWTest {
     public Servo ggLeft     = null;
     public Servo gpServo    = null;
 
+    /* Jewel splitter mapping(jewelsplit)*/
+    public Servo jewelSplit = null;
+
+    /* Sensor for jewel split */
+    public NormalizedColorSensor jewelColor = null;
+
+
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
@@ -66,6 +76,8 @@ public class ForgeHWTest {
         ggLeft= hwMap.get(Servo.class, "gg_Left");
         ggRight= hwMap.get(Servo.class, "gg_Right");
         gpServo= hwMap.get (Servo.class, "gp_Servo");
+        jewelSplit = hwMap.get (Servo.class, "js_Servo");
+        //jewelColor = hwMap.get(NormalizedColorSensor.class, "js_Color");
 
         frontRightDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
@@ -83,6 +95,12 @@ public class ForgeHWTest {
         ggLeft.setPosition(1);
         ggRight.setPosition(0);
         gpServo.setPosition(.95);
+        jewelSplit.setPosition(0);
+
+        //turn on light for color sensor
+        if (jewelColor instanceof SwitchableLight) {
+            ((SwitchableLight)jewelColor).enableLight(true);
+        }
 
 
 
