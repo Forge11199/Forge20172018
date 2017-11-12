@@ -14,14 +14,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 public class ForgeHWTest {
-
-
    /*
         *
         * This class can be used to define all the specific hardware for a single robot.
         * In this case that robot is the FORGE TEST Bot
         *
-        * This hardware class assumes the following device names have been configured on the robot:
+        * This hardware class assumes the following device n
+
+ames have been configured on the robot:
         * Note:  All names are lower case and some have single spaces between words.
         *
         * HARDWARE COMPONENT NAMES -- SHOULD match profile on phone
@@ -38,17 +38,22 @@ public class ForgeHWTest {
 
     /* Define variables for hardware components. */
     public DcMotor frontRightDrive   = null;
-    public DcMotor frontLeftDrive = null;
-    public DcMotor backRightDrive   = null;
-    public DcMotor backLeftDrive = null;
+    public DcMotor frontLeftDrive    = null;
+    public DcMotor backRightDrive    = null;
+    public DcMotor backLeftDrive     = null;
 
-   /* Glyph grabber mapping(gg) */
+   /* Glyph grabber mapping(gg)
     public Servo ggRight    = null;
     public Servo ggLeft     = null;
-    public Servo gpServo    = null;
+    public Servo gpServo    = null;*/
 
     /* Jewel splitter mapping(jewelsplit)*/
     public Servo jewelSplit = null;
+
+    /* Glyph intake mapping */
+    public Servo giLeft     = null;
+    public Servo giRight    = null;
+    public Servo liftServo  = null;
 
     /* Sensor for jewel split */
     public NormalizedColorSensor jewelColor = null;
@@ -73,17 +78,28 @@ public class ForgeHWTest {
         frontLeftDrive = hwMap.get(DcMotor.class, "front_left_drive");
         backRightDrive= hwMap.get(DcMotor.class, "back_right_drive");
         backLeftDrive= hwMap.get(DcMotor.class, "back_left_drive");
-        ggLeft= hwMap.get(Servo.class, "gg_Left");
-        ggRight= hwMap.get(Servo.class, "gg_Right");
-        gpServo= hwMap.get (Servo.class, "gp_Servo");
-        jewelSplit = hwMap.get (Servo.class, "js_Servo");
-        //jewelColor = hwMap.get(NormalizedColorSensor.class, "js_Color");
+
+        // Set Braking Mode
+        frontRightDrive.setZeroPowerBehavior((DcMotor.ZeroPowerBehavior.BRAKE));
+        frontLeftDrive.setZeroPowerBehavior((DcMotor.ZeroPowerBehavior.BRAKE));
+        backRightDrive.setZeroPowerBehavior((DcMotor.ZeroPowerBehavior.BRAKE));
+        backLeftDrive.setZeroPowerBehavior((DcMotor.ZeroPowerBehavior.BRAKE));
 
         frontRightDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         backRightDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         backLeftDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
 
+
+        //ggLeft= hwMap.get(Servo.class, "gg_Left");
+        //ggRight= hwMap.get(Servo.class, "gg_Right");
+        //gpServo= hwMap.get (Servo.class, "gp_Servo");
+        jewelSplit = hwMap.get (Servo.class, "js_Servo");
+        giLeft = hwMap.get (Servo.class, "gi_Left");
+        giRight = hwMap.get (Servo.class, "gi_Right");
+        liftServo = hwMap.get (Servo.class, "lift_Servo");
+
+        //jewelColor = hwMap.get(NormalizedColorSensor.class, "js_Color");
 
         // Set all motors to zero power
         frontRightDrive.setPower(0);
@@ -92,16 +108,19 @@ public class ForgeHWTest {
         backLeftDrive.setPower(0);
 
         //Set all servo to zero and another unknown number for the moment
-        ggLeft.setPosition(1);
-        ggRight.setPosition(0);
-        gpServo.setPosition(.95);
+        //ggLeft.setPosition(1);
+        //ggRight.setPosition(0);
+        //gpServo.setPosition(.95);
         jewelSplit.setPosition(0);
+
+        giRight.setPosition(.5);   // Stop Right
+        giLeft.setPosition(.5);    // Stop Left
+        liftServo.setPosition(.45);   // Set to bottom,
 
         //turn on light for color sensor
         if (jewelColor instanceof SwitchableLight) {
             ((SwitchableLight)jewelColor).enableLight(true);
         }
-
 
 
         //***** NEED TO CHANGE TO ENCODER *******

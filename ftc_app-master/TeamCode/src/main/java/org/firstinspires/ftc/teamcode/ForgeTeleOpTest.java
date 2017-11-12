@@ -35,6 +35,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import static android.R.attr.left;
+import static android.R.attr.right;
+
 /**
  * This file provides basic Telop driving for a Pushbot robot.
  * The code is structured as an Iterative OpMode
@@ -84,7 +87,8 @@ public class ForgeTeleOpTest extends OpMode{
      * Code to run ONCE when the driver hits PLAY
      */
     @Override
-    public void start() {
+    public void start()
+    {
     }
 
     /*
@@ -94,67 +98,158 @@ public class ForgeTeleOpTest extends OpMode{
     public void loop() {
         double left;
         double right;
+        left = 0;
+        right =0;
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
         left = -gamepad1.left_stick_y;
         right = -gamepad1.right_stick_y;
+
 
         robot.frontRightDrive.setPower(left);
         robot.frontLeftDrive.setPower(right);
         robot.backRightDrive.setPower(left);
         robot.backLeftDrive.setPower(right);
 
+        //robot.giLeft.setPosition(.50);
+        //robot.giRight.setPosition(.50);
+        //robot.jewelSplit.setPosition(0);
+
 
         // Send telemetry message to signify robot running;
-        telemetry.addData("left",  "%.2f", left);
+        telemetry.addData("left", "%.2f", left);
         telemetry.addData("right", "%.2f", right);
 
-        //puts the glyph grabber in the start position; inside the robot
+
+
+
+        // Strafe Without Encoders - TEST
+        if (gamepad1.dpad_right)
+        {
+            strafeRight();
+        }
+        if (gamepad1.dpad_left) {
+            strafeLeft();
+        }
+
+        //glyph intake at regular speed
         if (gamepad2.right_bumper)
         {
-            openGlyphGrabber();
-        }
+            glyphIntakeIn();        }
 
-        //opens the glyph grabber half way
+        //spits out glyphs
+
         if (gamepad2.left_bumper)
         {
-            halfGlyphGrabber();
+            glyphIntakeOut();
         }
 
-        //closes it around the glyph
         if (gamepad2.x)
         {
-            closeGlyphGrabber();
+            glyphIntakeOff();
         }
 
-        //off position/down position for glyph pusher
-        if (gamepad2.dpad_left)
-        {
-            offGlyphPusher();
-        }
-
-        //1st level glyph pusher
-        if (gamepad2.dpad_down)
-        {
-            partialGlyphPusher();
-        }
-
-        //2nd level glyph pusher
         if (gamepad2.dpad_up)
         {
-            fullGlyphPusher();
+            liftServoMax();
+        }
+        else
+        {
+            stop();
         }
 
-        //highest position for pushing glyphs into cryptobox
-        if (gamepad2.dpad_right)
+        if (gamepad2.dpad_down)
         {
-            upGylphPusher ();
+            liftServoDown();
         }
     }
 
 
 
+    private void strafeRight ()
+    {
+        robot.frontRightDrive.setPower(.75);
+        robot.frontLeftDrive.setPower(-.75);
+        robot.backRightDrive.setPower(-.75);
+        robot.backLeftDrive.setPower(.75);
+    }
+
+
+    private void strafeLeft ()
+    {
+
+
+        robot.frontRightDrive.setPower(-.75);
+        robot.frontLeftDrive.setPower(.75);
+        robot.backRightDrive.setPower(.75);
+        robot.backLeftDrive.setPower(-.75);
+
+    }
+
+    private void glyphIntakeOut ()
+    {
+        robot.giLeft.setPosition(.45);
+        robot.giRight.setPosition(.55);
+    }
+
+    private void glyphIntakeOff ()
+    {
+        robot.giLeft.setPosition(.50);
+        robot.giRight.setPosition(.50);
+    }
+
+    private void glyphIntakeIn  ()
+    {
+        robot.giLeft.setPosition(.55);
+        robot.giRight.setPosition(.45);
+    }
+
+
+    private void liftServoDown  ()
+    {
+        robot.liftServo.setPosition(.45);
+    }
+
+    private void liftServoMax  ()
+    {
+        robot.liftServo.setPosition(.67);
+    }
+
+    @Override
+    public void stop()
+    {
+        //robot.ggRight.setPosition(0);
+        //robot.ggLeft.setPosition(1);
+        //robot.gpServo.setPosition(.95);
+        robot.frontRightDrive.setPower(0);
+        robot.frontLeftDrive.setPower(0);
+        robot.backRightDrive.setPower(0);
+        robot.backLeftDrive.setPower(0);
+        robot.giLeft.setPosition(.50);
+        robot.giRight.setPosition(.50);
+        robot.jewelSplit.setPosition(0);
+        //PUT POSITION FOR LIFT HERE
+
+    }
+
+    /**
+     * Sleeps for the given amount of milliseconds, or until the thread is interrupted. This is
+     * simple shorthand for the operating-system-provided {@link Thread#sleep(long) sleep()} method.
+     *
+     * @param milliseconds amount of time to sleep, in milliseconds
+     * @see Thread#sleep(long)
+     */
+    public final void sleep(long milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    /*
     private void openGlyphGrabber()
+
     {
         robot.ggRight.setPosition(1);
         robot.ggLeft.setPosition(0);
@@ -220,38 +315,60 @@ public class ForgeTeleOpTest extends OpMode{
         robot.gpServo.setPosition(startPos);
     }
 
+
+//puts the glyph grabber in the start position; inside the robot
+       /* if (gamepad2.right_bumper)
+        {
+            openGlyphGrabber();
+        }
+           */
+    //opens the glyph grabber half way
+        /* if (gamepad2.left_bumper)
+        {
+            halfGlyphGrabber();
+        }2
+
+        //closes it around the glyph
+        if (gamepad2.x)
+        {
+            closeGlyphGrabber();
+        }
+
+        //off position/down position for glyph pusher
+        if (gamepad2.dpad_left)
+        {
+            offGlyphPusher();
+        }
+
+        //1st level glyph pusher
+        if (gamepad2.dpad_down)
+        {
+            partialGlyphPusher();
+        }
+
+        //2nd level glyph pusher
+        if (gamepad2.dpad_up)
+        {
+            fullGlyphPusher();
+        }
+
+        //highest position for pushing glyphs into cryptobox
+        if (gamepad2.dpad_right)
+        {
+            upGylphPusher ();
+        }
+
     //Up glyph pusher to knock off glyph pit glyphs
     private void upGylphPusher()
     {
         robot.gpServo.setPosition(.30);
     }
 
-
+    */
 
     /*
      * Code to run ONCE after the driver hits STOP
      */
-    @Override
-    public void stop()
-    {
-        robot.ggRight.setPosition(0);
-        robot.ggLeft.setPosition(1);
-        robot.gpServo.setPosition(.95);
-    }
 
-    /**
-     * Sleeps for the given amount of milliseconds, or until the thread is interrupted. This is
-     * simple shorthand for the operating-system-provided {@link Thread#sleep(long) sleep()} method.
-     *
-     * @param milliseconds amount of time to sleep, in milliseconds
-     * @see Thread#sleep(long)
-     */
-    public final void sleep(long milliseconds) {
-        try {
-            Thread.sleep(milliseconds);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-    }
 
 }
