@@ -77,6 +77,11 @@ import java.util.Locale;
 
 public class ForgeAuto extends LinearOpMode {
 
+        frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
     /* Declare OpMode members. */
     ForgeHWTest         robot   = new ForgeHWTest();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
@@ -137,6 +142,24 @@ public class ForgeAuto extends LinearOpMode {
         //robot.ggLeft.setPosition(0.0);            // S4: Stop and close the claw.
         //robot.ggRight.setPosition(1.0);
 
+
+        robot.frontLeftDrive.setMode(Dc.RunMode.RUN_TO_POSITION);
+        robot.frontRightDrive.setMode(Dc.RunMode.RUN_TO_POSITION);
+        robot.backLeftDrive.setMode(Dc.RunMode.RUN_TO_POSITION);
+        robot.backRightDrive.setMode(Dc.RunMode.RUN_TO_POSITION);
+
+
+        frontLeftDrive.setTargetPosition(1);
+        frontLeftDrive.setPower(.20);
+
+        frontRightDrive.setTargetPosition(1);
+        frontRightDrive.setPower(.20);
+
+        backLeftDrive.setTargetPosition(1);
+        backLeftDrive.setPower(.20);
+
+        backRightDrive.setTargetPosition(1);
+        backRightDrive.setPower(.20);
 
         robot.jewelSplit.setPosition(0.83);
         sleep(1000);    //put jewel splitter down
