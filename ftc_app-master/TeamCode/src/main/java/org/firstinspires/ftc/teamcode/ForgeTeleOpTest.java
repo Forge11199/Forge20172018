@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.*;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -111,6 +112,7 @@ public class ForgeTeleOpTest extends OpMode{
         robot.backRightDrive.setPower(left);
         robot.backLeftDrive.setPower(right);
 
+
         //robot.giLeft.setPosition(.50);
         //robot.giRight.setPosition(.50);
         //robot.jewelSplit.setPosition(0);
@@ -132,36 +134,43 @@ public class ForgeTeleOpTest extends OpMode{
             strafeLeft();
         }
 
-        //glyph intake at regular speed
-        if (gamepad2.right_bumper)
+        // Glyph IN
+        if (gamepad2.a)
         {
-            glyphIntakeIn();        }
-
-        //spits out glyphs
-
-        if (gamepad2.left_bumper)
-        {
-            glyphIntakeOut();
+            robot.giLeft.setPosition(.55);
+            robot.giRight.setPosition(.45);
         }
+        if (gamepad2.y)
+        {
+            robot.giLeft.setPosition(.45);
+            robot.giRight.setPosition(.55);
 
+        }
         if (gamepad2.x)
         {
-            glyphIntakeOff();
+            robot.giLeft.setPosition(.50);
+            robot.giRight.setPosition(.50);
         }
+
 
         if (gamepad2.dpad_up)
         {
             liftServoMax();
-        }
-        else
-        {
-            stop();
         }
 
         if (gamepad2.dpad_down)
         {
             liftServoDown();
         }
+        if (gamepad2.dpad_right)
+        {
+            liftServoMiddle();
+        }
+        if (gamepad2.dpad_left)
+        {
+            liftServoGlyph1And2();
+        }
+
     }
 
 
@@ -185,9 +194,10 @@ public class ForgeTeleOpTest extends OpMode{
         robot.backLeftDrive.setPower(-.75);
 
     }
-
+    /* NOT WORKING
     private void glyphIntakeOut ()
     {
+
         robot.giLeft.setPosition(.45);
         robot.giRight.setPosition(.55);
     }
@@ -203,7 +213,7 @@ public class ForgeTeleOpTest extends OpMode{
         robot.giLeft.setPosition(.55);
         robot.giRight.setPosition(.45);
     }
-
+    */
 
     private void liftServoDown  ()
     {
@@ -214,6 +224,18 @@ public class ForgeTeleOpTest extends OpMode{
     {
         robot.liftServo.setPosition(.67);
     }
+
+    private void liftServoMiddle  ()
+    {
+        robot.liftServo.setPosition(.59);
+    }
+
+    private void liftServoGlyph1And2  ()
+    {
+        robot.liftServo.setPosition(.52);
+    }
+
+
 
     @Override
     public void stop()
