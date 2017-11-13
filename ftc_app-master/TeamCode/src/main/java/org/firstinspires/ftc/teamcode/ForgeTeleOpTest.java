@@ -55,6 +55,7 @@ import static android.R.attr.right;
  */
 
 @TeleOp(name="Forge: Teleop Test", group="Test Bot")
+@Disabled
 public class ForgeTeleOpTest extends OpMode{
 
     /* Declare OpMode members. */
@@ -218,21 +219,25 @@ public class ForgeTeleOpTest extends OpMode{
     private void liftServoDown  ()
     {
         robot.liftServo.setPosition(.45);
+        robot.liftServo.setPosition(.45);
     }
 
     private void liftServoMax  ()
     {
         robot.liftServo.setPosition(.67);
+        //robot.liftServo2.setPosition(.67);
     }
 
     private void liftServoMiddle  ()
     {
         robot.liftServo.setPosition(.59);
+        //robot.liftServo2.setPosition(.59);
     }
 
     private void liftServoGlyph1And2  ()
     {
         robot.liftServo.setPosition(.52);
+        //robot.liftServo1.setPosition(.52);
     }
 
 

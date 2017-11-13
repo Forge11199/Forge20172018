@@ -37,6 +37,23 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+
+
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
  * It uses the common Pushbot hardware class to define the drive on the robot.
@@ -64,12 +81,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Forge Red: Auto Drive By Encoder ", group="Auto")
+@Autonomous(name="Forge Red: Auto ", group="Auto")
 
 public class ForgeAutoRed extends LinearOpMode {
 
     /* Declare OpMode members. */
-    ForgeHWTest         robot   = new ForgeHWTest();   // Use a Pushbot's hardware
+    ForgeHW         robot   = new ForgeHW();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
@@ -82,15 +99,47 @@ public class ForgeAutoRed extends LinearOpMode {
     ColorSensor sensorColor;
     //DistanceSensor sensorDistance;
 
+    // Vulforia Variables
+    public static final String TAG = "Vuforia VuMark Sample";
+    OpenGLMatrix lastLocation = null;
+    VuforiaLocalizer vuforia;
+    RelicRecoveryVuMark vuMark;
 
     @Override
     public void runOpMode() {
+
+        // KNO3 Transition
+        AutoTransitioner.transitionOnStop(this, "Forge TeleOp");
+        //
 
         /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
+
+        // ******* VuMarks Setup ******************************
+        // Vulforia Code
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+
+        //FORGE 11199 KEY
+        parameters.vuforiaLicenseKey = "Abalq3b/////AAAAGU+HLfwN7Ex0h9eBtGQ1tksoHCf8D3UiB+BOWeM8fTLhsr+a+ysYvifJvnfDyPrJuB8RcCXq2MtudAaviVZdV2nGw8Ny1QuA8k4RPCzqta5F/4jBapj/p0OURZ3Lue0DGQmUXGZDihyH9SetQEeHYRKV3U1U/PITxJnn6yOW3M6Q3AAZXFae893SR23xFq0fFD0FsiMp6DX7b54pMF2AZofVZ47wBzzF+HMy9FKaf3XRiLiW8RFzg/fIMCUq+79fyk9W3ekXDJGwzmFp8mdbCyjwto8mYhA4ZfKfdkK3wJcFurFiu4i8a902DCtW+V/G1z+G0I1X61jW4UX50D6JQYGLVVXYRd4Fxgm062NR6P2q";
+
+
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+
+        /**
+         * Load the data set containing the VuMarks for Relic Recovery. There's only one trackable
+         * in this data set: all three of the VuMarks in the game were created from this one template,
+         * but differ in their instance id information.
+         * @see VuMarkInstanceId
+         */
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+        // ******* VuMarks Setup ************************
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
@@ -119,84 +168,100 @@ public class ForgeAutoRed extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        // Step through each leg of the path,
-        // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        //encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        //encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+        relicTrackables.activate();   // Track VuMarks
 
-        //robot.ggLeft.setPosition(0.0);            // S4: Stop and close the claw.
-        //robot.ggRight.setPosition(1.0);
+        while (opModeIsActive()) {
 
 
-        robot.jewelSplit.setPosition(0.83);
-        sleep(1000);    //put jewel splitter down
+            // ********************* VUMARK SCAN ****************************
+            vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            if (vuMark != RelicRecoveryVuMark.UNKNOWN)
+            {
+                telemetry.addData("VuMark", "%s visible", vuMark);
+            }
+            else
+            {
+                telemetry.addData("VuMark", "not visible");
+            }
 
-        sensorColor = hardwareMap.get(ColorSensor.class, "js_Color");
+            telemetry.update();
+
+            // Use ViewMark color to determine where to place Glyph
+            // ********************* VUMARK SCAN ****************************
 
 
+            // Step through each leg of the path,
+            // Note: Reverse movement is obtained by setting a negative distance (not speed)
+            //encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+            //encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+            //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
-        // hsvValues is an array that will hold the hue, saturation, and value information.
-        float hsvValues[] = {0F, 0F, 0F};
+            //robot.ggLeft.setPosition(0.0);            // S4: Stop and close the claw.
+            //robot.ggRight.setPosition(1.0);
 
-        // values is a reference to the hsvValues array.
-        final float values[] = hsvValues;
 
-        // sometimes it helps to multiply the raw RGB values with a scale factor
-        // to amplify/attentuate the measured values.
-        final double SCALE_FACTOR = 255;
-        Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
-                (int) (sensorColor.green() * SCALE_FACTOR),
-                (int) (sensorColor.blue() * SCALE_FACTOR),
-                hsvValues);
+            robot.jewelSplit.setPosition(0.83);
+            sleep(1000);    //put jewel splitter down
 
-        // send the info back to driver station using telemetry function.
-        //  telemetry.addData("Distance (cm)",
-        //          String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
-        telemetry.addData("Alpha", sensorColor.alpha());
-        telemetry.addData("Red  ", sensorColor.red());
-        telemetry.addData("Green", sensorColor.green());
-        telemetry.addData("Blue ", sensorColor.blue());
-        telemetry.addData("Hue", hsvValues[0]);
-        telemetry.update();
-        sleep(1000);
+            sensorColor = hardwareMap.get(ColorSensor.class, "js_Color");
 
-        // Blue Alliance
-        if (sensorColor.red() > 13)
-        {
-            robot.frontRightDrive.setPower(-.25);
-            robot.frontLeftDrive.setPower(-.25);
-            robot.backRightDrive.setPower(-.25);
-            robot.backLeftDrive.setPower(-.25);
-            sleep(500);
-            robot.frontRightDrive.setPower(0);
-            robot.frontLeftDrive.setPower(0);
-            robot.backRightDrive.setPower(0);
-            robot.backLeftDrive.setPower(0);
+
+            // hsvValues is an array that will hold the hue, saturation, and value information.
+            float hsvValues[] = {0F, 0F, 0F};
+
+            // values is a reference to the hsvValues array.
+            final float values[] = hsvValues;
+
+            // sometimes it helps to multiply the raw RGB values with a scale factor
+            // to amplify/attentuate the measured values.
+            final double SCALE_FACTOR = 255;
+            Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
+                    (int) (sensorColor.green() * SCALE_FACTOR),
+                    (int) (sensorColor.blue() * SCALE_FACTOR),
+                    hsvValues);
+
+            // send the info back to driver station using telemetry function.
+            //  telemetry.addData("Distance (cm)",
+            //          String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
+            telemetry.addData("Alpha", sensorColor.alpha());
+            telemetry.addData("Red  ", sensorColor.red());
+            telemetry.addData("Green", sensorColor.green());
+            telemetry.addData("Blue ", sensorColor.blue());
+            telemetry.addData("Hue", hsvValues[0]);
+            telemetry.update();
+            sleep(1000);
+
+            // Blue Alliance
+            if (sensorColor.red() > 13) {
+                robot.frontRightDrive.setPower(-.25);
+                robot.frontLeftDrive.setPower(-.25);
+                robot.backRightDrive.setPower(-.25);
+                robot.backLeftDrive.setPower(-.25);
+                sleep(500);
+                robot.frontRightDrive.setPower(0);
+                robot.frontLeftDrive.setPower(0);
+                robot.backRightDrive.setPower(0);
+                robot.backLeftDrive.setPower(0);
+            } else {
+                robot.frontRightDrive.setPower(.25);
+                robot.frontLeftDrive.setPower(.25);
+                robot.backRightDrive.setPower(.25);
+                robot.backLeftDrive.setPower(.25);
+                sleep(500);
+                robot.frontRightDrive.setPower(0);
+                robot.frontLeftDrive.setPower(0);
+                robot.backRightDrive.setPower(0);
+                robot.backLeftDrive.setPower(0);
+            }
+
+
+            robot.jewelSplit.setPosition(0);
+            sleep(3000);
+
+
+            //telemetry.addData("Path", "Complete");
+            //telemetry.update();
         }
-        else
-        {
-            robot.frontRightDrive.setPower(.25);
-            robot.frontLeftDrive.setPower(.25);
-            robot.backRightDrive.setPower(.25);
-            robot.backLeftDrive.setPower(.25);
-            sleep(500);
-            robot.frontRightDrive.setPower(0);
-            robot.frontLeftDrive.setPower(0);
-            robot.backRightDrive.setPower(0);
-            robot.backLeftDrive.setPower(0);
-        }
-
-
-        robot.jewelSplit.setPosition(0);
-        sleep(3000);
-
-
-
-
-
-        //telemetry.addData("Path", "Complete");
-        //telemetry.update();
     }
 
     /*
@@ -228,7 +293,7 @@ public class ForgeAutoRed extends LinearOpMode {
             // Turn On RUN_TO_POSITION
             robot.frontLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.frontRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-// *** ADD OTHER Motors
+            // *** ADD OTHER Motors
 
             // reset the timeout time and start motion.
             runtime.reset();
