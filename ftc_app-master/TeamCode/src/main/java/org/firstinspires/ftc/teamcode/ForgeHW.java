@@ -111,12 +111,12 @@ ames have been configured on the robot:
         //jewelColor = hwMap.get(NormalizedColorSensor.class, "js_Color");
 
         //Set all servo to zero and another unknown number for the moment
-        jewelSplit.setPosition(0);
+        jewelSplit.setPosition(1);
         giRight.setPosition(.5);   // Stop Right
         giLeft.setPosition(.5);    // Stop Left
-        liftLeft.setPosition(.45);   // Set to servo 1bottom,
-        liftRight.setPosition(.45);    //Set to servo 2 bottom
-        phoneSpin.setPosition(.90);     //spins phone to left position
+        liftLeft.setPosition(.61);   // Set to servo 1bottom,
+        liftRight.setPosition(.37);    //Set to servo 2 bottom
+        phoneSpin.setPosition(.80);     //spins phone to left position
 
 
         //turn on light for color sensor

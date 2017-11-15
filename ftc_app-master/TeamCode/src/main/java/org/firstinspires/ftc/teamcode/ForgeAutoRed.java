@@ -94,7 +94,7 @@ public class ForgeAutoRed extends LinearOpMode {
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.6;
+    static final double     DRIVE_SPEED             = 0.8;
     static final double     TURN_SPEED              = 0.5;
     ColorSensor sensorColor;
     //DistanceSensor sensorDistance;
@@ -145,15 +145,6 @@ public class ForgeAutoRed extends LinearOpMode {
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
 
-        //robot.frontRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //robot.frontLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //robot.backLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //robot.backRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        /*robot.frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);*/
 
 
         // Send telemetry message to indicate successful Encoder reset
@@ -168,6 +159,7 @@ public class ForgeAutoRed extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
+        /*
         relicTrackables.activate();   // Track VuMarks
 
         while (opModeIsActive()) {
@@ -175,12 +167,9 @@ public class ForgeAutoRed extends LinearOpMode {
 
             // ********************* VUMARK SCAN ****************************
             vuMark = RelicRecoveryVuMark.from(relicTemplate);
-            if (vuMark != RelicRecoveryVuMark.UNKNOWN)
-            {
+            if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
                 telemetry.addData("VuMark", "%s visible", vuMark);
-            }
-            else
-            {
+            } else {
                 telemetry.addData("VuMark", "not visible");
             }
 
@@ -189,79 +178,97 @@ public class ForgeAutoRed extends LinearOpMode {
             // Use ViewMark color to determine where to place Glyph
             // ********************* VUMARK SCAN ****************************
 
-
-            // Step through each leg of the path,
-            // Note: Reverse movement is obtained by setting a negative distance (not speed)
-            //encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-            //encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-            //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
-
-            //robot.ggLeft.setPosition(0.0);            // S4: Stop and close the claw.
-            //robot.ggRight.setPosition(1.0);
-
-
-            robot.jewelSplit.setPosition(0.83);
-            sleep(1000);    //put jewel splitter down
-
-            sensorColor = hardwareMap.get(ColorSensor.class, "js_Color");
-
-
-            // hsvValues is an array that will hold the hue, saturation, and value information.
-            float hsvValues[] = {0F, 0F, 0F};
-
-            // values is a reference to the hsvValues array.
-            final float values[] = hsvValues;
-
-            // sometimes it helps to multiply the raw RGB values with a scale factor
-            // to amplify/attentuate the measured values.
-            final double SCALE_FACTOR = 255;
-            Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
-                    (int) (sensorColor.green() * SCALE_FACTOR),
-                    (int) (sensorColor.blue() * SCALE_FACTOR),
-                    hsvValues);
-
-            // send the info back to driver station using telemetry function.
-            //  telemetry.addData("Distance (cm)",
-            //          String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
-            telemetry.addData("Alpha", sensorColor.alpha());
-            telemetry.addData("Red  ", sensorColor.red());
-            telemetry.addData("Green", sensorColor.green());
-            telemetry.addData("Blue ", sensorColor.blue());
-            telemetry.addData("Hue", hsvValues[0]);
-            telemetry.update();
-            sleep(1000);
-
-            // Blue Alliance
-            if (sensorColor.red() > 13) {
-                robot.frontRightDrive.setPower(-.25);
-                robot.frontLeftDrive.setPower(-.25);
-                robot.backRightDrive.setPower(-.25);
-                robot.backLeftDrive.setPower(-.25);
-                sleep(500);
-                robot.frontRightDrive.setPower(0);
-                robot.frontLeftDrive.setPower(0);
-                robot.backRightDrive.setPower(0);
-                robot.backLeftDrive.setPower(0);
-            } else {
-                robot.frontRightDrive.setPower(.25);
-                robot.frontLeftDrive.setPower(.25);
-                robot.backRightDrive.setPower(.25);
-                robot.backLeftDrive.setPower(.25);
-                sleep(500);
-                robot.frontRightDrive.setPower(0);
-                robot.frontLeftDrive.setPower(0);
-                robot.backRightDrive.setPower(0);
-                robot.backLeftDrive.setPower(0);
-            }
-
-
-            robot.jewelSplit.setPosition(0);
-            sleep(3000);
-
-
-            //telemetry.addData("Path", "Complete");
-            //telemetry.update();
         }
+        */
+        // Face Camera Forward before Jewel
+        robot.phoneSpin.setPosition(.35);
+
+        robot.jewelSplit.setPosition(.2);
+        sleep(2000);    //put jewel splitter down
+
+        sensorColor = hardwareMap.get(ColorSensor.class, "js_Color");
+
+
+        // hsvValues is an array that will hold the hue, saturation, and value information.
+        float hsvValues[] = {0F, 0F, 0F};
+
+        // values is a reference to the hsvValues array.
+        final float values[] = hsvValues;
+
+        // sometimes it helps to multiply the raw RGB values with a scale factor
+        // to amplify/attentuate the measured values.
+        final double SCALE_FACTOR = 255;
+        Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
+                (int) (sensorColor.green() * SCALE_FACTOR),
+                (int) (sensorColor.blue() * SCALE_FACTOR),
+                hsvValues);
+
+        // send the info back to driver station using telemetry function.
+        //  telemetry.addData("Distance (cm)",
+        //          String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
+        telemetry.addData("Alpha", sensorColor.alpha());
+        telemetry.addData("Red  ", sensorColor.red());
+        telemetry.addData("Green", sensorColor.green());
+        telemetry.addData("Blue ", sensorColor.blue());
+        telemetry.addData("Hue", hsvValues[0]);
+        telemetry.update();
+        sleep(1000);
+
+
+
+        robot.frontRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.frontLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.backLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.backRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        robot.frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+        // Use MAth Positive and Negative, Subtract into one number and determine
+        // Blue Alliance
+        if (sensorColor.red() > sensorColor.blue()) {
+            robot.frontRightDrive.setPower(-.25);
+            robot.frontLeftDrive.setPower(-.25);
+            robot.backRightDrive.setPower(-.25);
+            robot.backLeftDrive.setPower(-.25);
+
+            sleep(200);
+            robot.frontRightDrive.setPower(0);
+            robot.frontLeftDrive.setPower(0);
+            robot.backRightDrive.setPower(0);
+            robot.backLeftDrive.setPower(0);
+        } else {
+            robot.frontRightDrive.setPower(.25);
+            robot.frontLeftDrive.setPower(.25);
+            robot.backRightDrive.setPower(.25);
+            robot.backLeftDrive.setPower(.25);
+            sleep(200);
+            robot.frontRightDrive.setPower(0);
+            robot.frontLeftDrive.setPower(0);
+            robot.backRightDrive.setPower(0);
+            robot.backLeftDrive.setPower(0);
+        }
+
+
+        robot.jewelSplit.setPosition(1);
+        sleep(3000);
+
+
+        // Drive with Encoder
+        // Step through each leg of the path,
+        // Note: Reverse movement is obtained by setting a negative distance (not speed)
+        encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        //encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+        //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+
+
+
+        //telemetry.addData("Path", "Complete");
+        //telemetry.update();
+
     }
 
     /*
@@ -286,19 +293,25 @@ public class ForgeAutoRed extends LinearOpMode {
             newRightTarget = robot.frontLeftDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
             newRightTarget = robot.backRightDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
             newRightTarget = robot.backLeftDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+
             robot.frontLeftDrive.setTargetPosition(newLeftTarget);
             robot.frontRightDrive.setTargetPosition(newRightTarget);
-            robot.frontLeftDrive.setTargetPosition(newLeftTarget);
+            robot.backLeftDrive.setTargetPosition(newLeftTarget);
+            robot.backLeftDrive.setTargetPosition(newLeftTarget);
 
             // Turn On RUN_TO_POSITION
             robot.frontLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.frontRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.backLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.backRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             // *** ADD OTHER Motors
 
             // reset the timeout time and start motion.
             runtime.reset();
             robot.frontLeftDrive.setPower(Math.abs(speed));
             robot.frontRightDrive.setPower(Math.abs(speed));
+            robot.backLeftDrive.setPower(Math.abs(speed));
+            robot.backRightDrive.setPower(Math.abs(speed));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -308,23 +321,31 @@ public class ForgeAutoRed extends LinearOpMode {
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
                    (runtime.seconds() < timeoutS) &&
-                   (robot.frontLeftDrive.isBusy() && robot.frontRightDrive.isBusy())) {
+                   (robot.frontLeftDrive.isBusy() && robot.frontRightDrive.isBusy() & robot.backLeftDrive.isBusy() & robot.backRightDrive.isBusy())) {
 
                 // Display it for the driver.
                 telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
-                telemetry.addData("Path2",  "Running at %7d :%7d",
+                telemetry.addData("Path2",  "Running at %7d :%7d :%7d :%7d",
                                             robot.frontLeftDrive.getCurrentPosition(),
-                                            robot.frontRightDrive.getCurrentPosition());
+                                            robot.frontRightDrive.getCurrentPosition(),
+                                            robot.backLeftDrive.getCurrentPosition(),
+                                            robot.backRightDrive.getCurrentPosition()
+                                                                                    );
                 telemetry.update();
             }
 
             // Stop all motion;
             robot.frontLeftDrive.setPower(0);
             robot.frontRightDrive.setPower(0);
+            robot.backLeftDrive.setPower(0);
+            robot.backRightDrive.setPower(0);
 
             // Turn off RUN_TO_POSITION
             robot.frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
 
             //  sleep(250);   // optional pause after each move
         }
