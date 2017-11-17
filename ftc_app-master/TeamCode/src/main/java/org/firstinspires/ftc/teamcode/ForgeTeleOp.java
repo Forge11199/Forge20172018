@@ -120,19 +120,19 @@ public class ForgeTeleOp extends OpMode{
         // Glyph IN
         if (gamepad2.a)         // Glyph Out
         {
-            robot.giLeft.setPosition(.55);
-            robot.giRight.setPosition(.45);
+            robot.giLeft.setPosition(.60);
+            robot.giRight.setPosition(.40);
         }
         if (gamepad2.y)         // Glyph In
         {
-            robot.giLeft.setPosition(.45);
-            robot.giRight.setPosition(.55);
+            robot.giLeft.setPosition(.40);
+            robot.giRight.setPosition(.60);
 
         }
         if (gamepad2.x)         // Glyph Stop
         {
-            robot.giLeft.setPosition(.50);
-            robot.giRight.setPosition(.50);
+            robot.giLeft.setPosition(.51);
+            robot.giRight.setPosition(.51);
         }
 
 
@@ -161,19 +161,19 @@ public class ForgeTeleOp extends OpMode{
 
     private void strafeRight ()
     {
-        robot.frontRightDrive.setPower(.75);
-        robot.frontLeftDrive.setPower(-.75);
-        robot.backRightDrive.setPower(-.75);
-        robot.backLeftDrive.setPower(.75);
+        robot.frontRightDrive.setPower(.90);
+        robot.frontLeftDrive.setPower(-.90);
+        robot.backRightDrive.setPower(-.90);
+        robot.backLeftDrive.setPower(.90);
     }
 
 
     private void strafeLeft ()
     {
-        robot.frontRightDrive.setPower(-.75);
-        robot.frontLeftDrive.setPower(.75);
-        robot.backRightDrive.setPower(.75);
-        robot.backLeftDrive.setPower(-.75);
+        robot.frontRightDrive.setPower(-.90);
+        robot.frontLeftDrive.setPower(.90);
+        robot.backRightDrive.setPower(.90);
+        robot.backLeftDrive.setPower(-.90);
     }
 
     private void strafeForward ()
@@ -194,26 +194,26 @@ public class ForgeTeleOp extends OpMode{
 
     private void liftServoDown  ()
     {
-        robot.liftLeft.setPosition(.61);
-        robot.liftRight.setPosition(.37);
+        robot.liftLeft.setPosition(.31);
+        robot.liftRight.setPosition(.34);
     }
 
     private void liftServoMax  ()
     {
-        robot.liftLeft.setPosition(.42);
-        robot.liftRight.setPosition(.20);
+        robot.liftLeft.setPosition(.50);
+        robot.liftRight.setPosition(.16);
     }
 
     private void liftServoMiddle  ()
     {
-        robot.liftLeft.setPosition(.48);
-        robot.liftRight.setPosition(.25);
+        robot.liftLeft.setPosition(.44);
+        robot.liftRight.setPosition(.21);
     }
 
     private void liftServoGlyph1And2  ()
     {
-        robot.liftLeft.setPosition(.54);
-        robot.liftRight.setPosition(.30);
+        robot.liftLeft.setPosition(.44);
+        robot.liftRight.setPosition(.21);
 
     }
 
@@ -230,11 +230,11 @@ public class ForgeTeleOp extends OpMode{
         robot.frontLeftDrive.setPower(0);
         robot.backRightDrive.setPower(0);
         robot.backLeftDrive.setPower(0);
-        robot.giLeft.setPosition(.50);
-        robot.giRight.setPosition(.50);
+        robot.giLeft.setPosition(.51);
+        robot.giRight.setPosition(.51);
         robot.jewelSplit.setPosition(0);
-        robot.liftLeft.setPosition(.61);
-        robot.liftRight.setPosition(.37);
+        robot.liftLeft.setPosition(.31);   // Set to servo 1bottom,
+        robot.liftRight.setPosition(.34);    //Set to servo 2 bottom
         robot.phoneSpin.setPosition(.35); // Face Forward for Teleop
 
         //PUT POSITION FOR LIFT HERE

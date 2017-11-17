@@ -68,6 +68,7 @@ ames have been configured on the robot:
         // Save reference to Hardware map
         hwMap = ahwMap;
 
+
         // *************** MOTORS ********************
         // Define and Initialize Motors
         frontRightDrive  = hwMap.get(DcMotor.class, "front_right_drive");
@@ -92,7 +93,7 @@ ames have been configured on the robot:
         backRightDrive.setPower(0);
         backLeftDrive.setPower(0);
 
-        //***** NEED TO CHANGE TO ENCODER *******
+                //***** NEED TO CHANGE TO ENCODER *******
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         frontRightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -110,12 +111,15 @@ ames have been configured on the robot:
         phoneSpin = hwMap.get   (Servo.class,"phone_Spin");
         //jewelColor = hwMap.get(NormalizedColorSensor.class, "js_Color");
 
+
         //Set all servo to zero and another unknown number for the moment
-        jewelSplit.setPosition(1);
-        giRight.setPosition(.5);   // Stop Right
-        giLeft.setPosition(.5);    // Stop Left
-        liftLeft.setPosition(.61);   // Set to servo 1bottom,
-        liftRight.setPosition(.37);    //Set to servo 2 bottom
+        //jewelSplit.setPosition(1);
+        giRight.setPosition(.51);   // Stop Right
+        giLeft.setPosition(.51);    // Stop Left
+
+        liftLeft.setPosition(.31);   // Set to servo 1bottom,
+        liftRight.setPosition(.34);    //Set to servo 2 bottom
+
         phoneSpin.setPosition(.80);     //spins phone to left position
 
 

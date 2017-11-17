@@ -74,6 +74,7 @@ ames have been configured on the robot:
         // Save reference to Hardware map
         hwMap = ahwMap;
 
+
         // Define and Initialize Motors
         frontRightDrive  = hwMap.get(DcMotor.class, "front_right_drive");
         frontLeftDrive = hwMap.get(DcMotor.class, "front_left_drive");
