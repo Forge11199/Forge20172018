@@ -183,7 +183,7 @@ public class ForgeAutoRed extends LinearOpMode {
         // Face Camera Forward before Jewel
         robot.phoneSpin.setPosition(.35);
 
-        robot.jewelSplit.setPosition(.2);
+        robot.jewelSplit.setPosition(.15);
         sleep(2000);    //put jewel splitter down
 
         sensorColor = hardwareMap.get(ColorSensor.class, "js_Color");
@@ -230,22 +230,31 @@ public class ForgeAutoRed extends LinearOpMode {
         // Use MAth Positive and Negative, Subtract into one number and determine
         // Blue Alliance
         if (sensorColor.red() > sensorColor.blue()) {
+            encoderDrive(DRIVE_SPEED,  -1.5,  -1.5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+            /*
             robot.frontRightDrive.setPower(-.25);
             robot.frontLeftDrive.setPower(-.25);
             robot.backRightDrive.setPower(-.25);
             robot.backLeftDrive.setPower(-.25);
+            */
 
-            sleep(200);
+            sleep(500);
             robot.frontRightDrive.setPower(0);
             robot.frontLeftDrive.setPower(0);
             robot.backRightDrive.setPower(0);
             robot.backLeftDrive.setPower(0);
         } else {
+            encoderDrive(DRIVE_SPEED,  1.5   ,  1.5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+
+            /*
             robot.frontRightDrive.setPower(.25);
+             */
+            /*
             robot.frontLeftDrive.setPower(.25);
             robot.backRightDrive.setPower(.25);
             robot.backLeftDrive.setPower(.25);
-            sleep(200);
+            */
+            sleep(500);
             robot.frontRightDrive.setPower(0);
             robot.frontLeftDrive.setPower(0);
             robot.backRightDrive.setPower(0);
@@ -254,13 +263,13 @@ public class ForgeAutoRed extends LinearOpMode {
 
 
         robot.jewelSplit.setPosition(1);
-        sleep(3000);
+        sleep(2000);
 
 
         // Drive with Encoder
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        //encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
         //encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
         //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
@@ -297,7 +306,7 @@ public class ForgeAutoRed extends LinearOpMode {
             robot.frontLeftDrive.setTargetPosition(newLeftTarget);
             robot.frontRightDrive.setTargetPosition(newRightTarget);
             robot.backLeftDrive.setTargetPosition(newLeftTarget);
-            robot.backLeftDrive.setTargetPosition(newLeftTarget);
+            robot.backRightDrive.setTargetPosition(newLeftTarget);
 
             // Turn On RUN_TO_POSITION
             robot.frontLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);

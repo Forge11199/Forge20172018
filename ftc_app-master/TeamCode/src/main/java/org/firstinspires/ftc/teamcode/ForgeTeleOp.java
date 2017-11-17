@@ -95,6 +95,9 @@ public class ForgeTeleOp extends OpMode{
         left = 0;
         right =0;
 
+        // Face Camera Forward before Jewel
+        robot.phoneSpin.setPosition(.35);
+
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
         left = -gamepad1.left_stick_y;
         right = -gamepad1.right_stick_y;
