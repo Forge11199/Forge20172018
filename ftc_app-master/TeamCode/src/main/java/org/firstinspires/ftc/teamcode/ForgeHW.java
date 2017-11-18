@@ -119,6 +119,7 @@ ames have been configured on the robot:
 
         liftLeft.setPosition(.31);   // Set to servo 1bottom,
         liftRight.setPosition(.34);    //Set to servo 2 bottom
+        jewelSplit.setPosition(1);
 
         phoneSpin.setPosition(.80);     //spins phone to left position
 

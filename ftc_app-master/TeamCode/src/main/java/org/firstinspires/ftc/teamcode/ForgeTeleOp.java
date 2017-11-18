@@ -47,7 +47,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Forge: Teleop Test", group="Test Bot")
+@TeleOp(name="Forge: Teleop", group="Forge")
 public class ForgeTeleOp extends OpMode{
 
     /* Declare OpMode members. */
@@ -138,6 +138,11 @@ public class ForgeTeleOp extends OpMode{
             robot.giRight.setPosition(.51);
         }
 
+        if (gamepad2.b)
+        {
+            robot.jewelSplit.setPosition(1);
+        }
+
 
         if (gamepad2.dpad_up)
         {
@@ -181,18 +186,18 @@ public class ForgeTeleOp extends OpMode{
 
     private void strafeForward ()
     {
-        robot.frontRightDrive.setPower(-.25);
-        robot.frontLeftDrive.setPower(-.25);
-        robot.backRightDrive.setPower(-.25);
-        robot.backLeftDrive.setPower(-.25);
-    }
-
-    private void strafeBack ()
-    {
         robot.frontRightDrive.setPower(.25);
         robot.frontLeftDrive.setPower(.25);
         robot.backRightDrive.setPower(.25);
         robot.backLeftDrive.setPower(.25);
+    }
+
+    private void strafeBack ()
+    {
+        robot.frontRightDrive.setPower(-.25);
+        robot.frontLeftDrive.setPower(-.25);
+        robot.backRightDrive.setPower(-.25);
+        robot.backLeftDrive.setPower(-.25);
     }
 
     private void liftServoDown  ()
@@ -235,7 +240,7 @@ public class ForgeTeleOp extends OpMode{
         robot.backLeftDrive.setPower(0);
         robot.giLeft.setPosition(.51);
         robot.giRight.setPosition(.51);
-        robot.jewelSplit.setPosition(0);
+        robot.jewelSplit.setPosition(1);
         robot.liftLeft.setPosition(.31);   // Set to servo 1bottom,
         robot.liftRight.setPosition(.34);    //Set to servo 2 bottom
         robot.phoneSpin.setPosition(.35); // Face Forward for Teleop

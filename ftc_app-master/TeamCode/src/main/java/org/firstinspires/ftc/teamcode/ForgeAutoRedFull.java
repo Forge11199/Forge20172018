@@ -73,9 +73,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Forge Blue: Auto ", group="Auto")
+@Autonomous(name="Forge Red: Auto Full", group="Auto")
 
-public class ForgeAutoBlue extends LinearOpMode {
+public class ForgeAutoRedFull extends LinearOpMode {
 
     /* Declare OpMode members. */
     ForgeHW         robot   = new ForgeHW();   // Use a Pushbot's hardware
@@ -174,6 +174,14 @@ public class ForgeAutoBlue extends LinearOpMode {
         */
         // Face Camera Forward before Jewel
         robot.phoneSpin.setPosition(.35);
+        sleep(500);
+
+        // Move Lift To Middle
+        robot.liftLeft.setPosition(.44);
+        robot.liftRight.setPosition(.21);
+        sleep(1000);
+
+
 
         robot.jewelSplit.setPosition(.15);
         sleep(2000);    //put jewel splitter down
@@ -221,8 +229,10 @@ public class ForgeAutoBlue extends LinearOpMode {
 
         // Use MAth Positive and Negative, Subtract into one number and determine
         // Blue Alliance
-        if (sensorColor.red() < sensorColor.blue()) {
-            encoderDrive(DRIVE_SPEED,  -1.5,  -1.5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        boolean forward=true;
+        if (sensorColor.red() > sensorColor.blue()) {
+            encoderDrive(.4,  -1.5,  -1.5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+            forward=false;
             /*
             robot.frontRightDrive.setPower(-.25);
             robot.frontLeftDrive.setPower(-.25);
@@ -236,8 +246,8 @@ public class ForgeAutoBlue extends LinearOpMode {
             robot.backRightDrive.setPower(0);
             robot.backLeftDrive.setPower(0);
         } else {
-            encoderDrive(DRIVE_SPEED,  1.5   ,  1.5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-
+            encoderDrive(.4,  1.5   ,  1.5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+            forward=true;
             /*
             robot.frontRightDrive.setPower(.25);
              */
@@ -257,6 +267,32 @@ public class ForgeAutoBlue extends LinearOpMode {
         robot.jewelSplit.setPosition(1);
         sleep(2000);
 
+        double extraDistance = 0; //22 ;// Extra distance to get starting point
+        double distanceToTravelL = extraDistance + 6 ; // Total Distance to Sweet Spot
+        double distanceToTravelR = extraDistance + 4.0   ; // Total Distance to Sweet Spot
+
+        if (forward=false)
+        {
+            encoderDrive(.5, distanceToTravelL, distanceToTravelR, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        }
+
+        else
+        {
+            encoderDrive(.5, distanceToTravelL+5, distanceToTravelR+5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        }
+        //strafeLeft();
+        //sleep(100);
+
+        //strafeForward();
+        //sleep(100);
+
+        liftServoDown();
+        sleep(200);
+
+        robot.giLeft.setPosition(.40);
+        robot.giRight.setPosition(.60);
+
+        sleep(3000);
 
         // Drive with Encoder
         // Step through each leg of the path,
@@ -351,4 +387,54 @@ public class ForgeAutoBlue extends LinearOpMode {
             //  sleep(250);   // optional pause after each move
         }
     }
+    private void strafeRight ()
+    {
+        robot.frontRightDrive.setPower(.90);
+        robot.frontLeftDrive.setPower(-.90);
+        robot.backRightDrive.setPower(-.90);
+        robot.backLeftDrive.setPower(.90);
+    }
+
+
+    private void strafeLeft ()
+    {
+        robot.frontRightDrive.setPower(-.90);
+        robot.frontLeftDrive.setPower(.90);
+        robot.backRightDrive.setPower(.90);
+        robot.backLeftDrive.setPower(-.90);
+    }
+
+    private void strafeForward ()
+    {
+        robot.frontRightDrive.setPower(.25);
+        robot.frontLeftDrive.setPower(.25);
+        robot.backRightDrive.setPower(.25);
+        robot.backLeftDrive.setPower(.25);
+    }
+    private void liftServoDown  ()
+    {
+        robot.liftLeft.setPosition(.31);
+        robot.liftRight.setPosition(.34);
+    }
+
+    private void liftServoMax  ()
+    {
+        robot.liftLeft.setPosition(.50);
+        robot.liftRight.setPosition(.16);
+    }
+
+    private void liftServoMiddle  ()
+    {
+        robot.liftLeft.setPosition(.44);
+        robot.liftRight.setPosition(.21);
+    }
+
+    private void liftServoGlyph1And2  ()
+    {
+        robot.liftLeft.setPosition(.44);
+        robot.liftRight.setPosition(.21);
+
+    }
+
+
 }
