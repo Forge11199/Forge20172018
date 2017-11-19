@@ -73,9 +73,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Forge Red: Auto Full", group="Auto")
+@Autonomous(name="Forge Blue: Auto Full", group="Auto")
 
-public class ForgeAutoRedFull extends LinearOpMode {
+public class ForgeAutoBlueFull extends LinearOpMode {
 
     /* Declare OpMode members. */
     ForgeHW         robot   = new ForgeHW();   // Use a Pushbot's hardware
@@ -268,8 +268,8 @@ public class ForgeAutoRedFull extends LinearOpMode {
         sleep(2000);
 
         double extraDistance = 0; //22 ;// Extra distance to get starting point
-        double distanceToTravelL = extraDistance + 6 ; // Total Distance to Sweet Spot
-        double distanceToTravelR = extraDistance + 4.0   ; // Total Distance to Sweet Spot
+        double distanceToTravelL = extraDistance + -4 ; // Total Distance to Sweet Spot
+        double distanceToTravelR = extraDistance + -6.0   ; // Total Distance to Sweet Spot
 
         if (forward=false)
         {
@@ -278,7 +278,7 @@ public class ForgeAutoRedFull extends LinearOpMode {
 
         else
         {
-            encoderDrive(.4, distanceToTravelL+5, distanceToTravelR+5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+            encoderDrive(.4, distanceToTravelL +-5, distanceToTravelR + -5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
         }
         //strafeLeft();
         //sleep(100);
@@ -289,8 +289,9 @@ public class ForgeAutoRedFull extends LinearOpMode {
         liftServoDown();
         sleep(200);
 
-        robot.giLeft.setPosition(.40); //robot.giLeft.setPosition(.40);
+        robot.giLeft.setPosition(.40); //robot.giLeft.setPosition(.75);
         robot.giRight.setPosition(.60);
+
 
         sleep(3000);
 

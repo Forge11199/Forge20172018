@@ -123,18 +123,20 @@ public class ForgeTeleOp extends OpMode{
         // Glyph IN
         if (gamepad2.a)         // Glyph Out
         {
-            robot.giLeft.setPosition(.60);
+            robot.giLeft.setPosition(.60); //robot.giLeft.setPosition(.75);
             robot.giRight.setPosition(.40);
         }
+
         if (gamepad2.y)         // Glyph In
         {
-            robot.giLeft.setPosition(.40);
+            robot.giLeft.setPosition(.40); //robot.giLeft.setPosition(.75);
             robot.giRight.setPosition(.60);
 
         }
+
         if (gamepad2.x)         // Glyph Stop
         {
-            robot.giLeft.setPosition(.51);
+            robot.giLeft.setPosition(.51); //robot.giLeft.setPosition(.50);
             robot.giRight.setPosition(.51);
         }
 
@@ -238,7 +240,7 @@ public class ForgeTeleOp extends OpMode{
         robot.frontLeftDrive.setPower(0);
         robot.backRightDrive.setPower(0);
         robot.backLeftDrive.setPower(0);
-        robot.giLeft.setPosition(.51);
+        robot.giLeft.setPosition(.51);  //robot.giLeft.setPosition(.50);
         robot.giRight.setPosition(.51);
         robot.jewelSplit.setPosition(1);
         robot.liftLeft.setPosition(.31);   // Set to servo 1bottom,
