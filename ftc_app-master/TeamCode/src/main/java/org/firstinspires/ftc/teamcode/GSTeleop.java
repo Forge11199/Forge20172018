@@ -52,6 +52,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  */
 
 @TeleOp(name="GS Teleop Tank", group="Pushbot")
+@Disabled
 public class GSTeleop extends OpMode{
 
     /* Declare OpMode members. */
