@@ -49,6 +49,7 @@ ames have been configured on the robot:
     public Servo liftLeft  = null;
     public Servo liftRight = null;
     public Servo phoneSpin = null;
+    public Servo swivelArm  = null;
 
     /* Sensor for jewel split */
     public NormalizedColorSensor jewelColor = null;
@@ -109,6 +110,7 @@ ames have been configured on the robot:
         liftLeft = hwMap.get (Servo.class, "lift_Left");
         liftRight = hwMap.get  (Servo.class, "lift_Right");
         phoneSpin = hwMap.get   (Servo.class,"phone_Spin");
+        swivelArm = hwMap. get  (Servo.class, "swivel_Arm");
         //jewelColor = hwMap.get(NormalizedColorSensor.class, "js_Color");
 
 

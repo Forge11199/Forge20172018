@@ -82,7 +82,7 @@ public class ForgeAutoBasic extends LinearOpMode {
     private ElapsedTime     runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: TETRIX Motor Encoder 1440
-    static final double     DRIVE_GEAR_REDUCTION    = .7 ;     // This is < 1.0 if geared UP
+    static final double     DRIVE_GEAR_REDUCTION    = .66 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
@@ -113,7 +113,7 @@ public class ForgeAutoBasic extends LinearOpMode {
                 robot.frontLeftDrive.getCurrentPosition(),
                 robot.frontRightDrive.getCurrentPosition(),
                 robot.backLeftDrive.getCurrentPosition(),
-                robot.backLeftDrive.getCurrentPosition());
+                robot.backRightDrive.getCurrentPosition());
 
         telemetry.update();
         sleep(3000);  // Pause to allow for viewing
@@ -125,18 +125,46 @@ public class ForgeAutoBasic extends LinearOpMode {
         robot.backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-
-        encoderDrive(.4, 1, 1, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        // Drive off platform
+        encoderDrive(.4, 2, 2, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0", "Starting at %7d :%7d",
                 robot.frontLeftDrive.getCurrentPosition(),
                 robot.frontRightDrive.getCurrentPosition(),
                 robot.backLeftDrive.getCurrentPosition(),
-                robot.backLeftDrive.getCurrentPosition());
+                robot.backRightDrive.getCurrentPosition());
 
         telemetry.update();
         sleep(3000);  // Pause to allow for viewing
+
+
+        // Drive to Jewel box
+        encoderDrive(.4, 26, 26, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+
+        // Send telemetry message to indicate successful Encoder reset
+        telemetry.addData("Path0", "Starting at %7d :%7d",
+                robot.frontLeftDrive.getCurrentPosition(),
+                robot.frontRightDrive.getCurrentPosition(),
+                robot.backLeftDrive.getCurrentPosition(),
+                robot.backRightDrive.getCurrentPosition());
+
+        telemetry.update();
+        sleep(3000);  // Pause to allow for viewing
+
+        encoderDriveStrafe(.4,Direction.LEFT,10,5.0);
+
+        // Send telemetry message to indicate successful Encoder reset
+        telemetry.addData("Path0", "Starting at %7d :%7d",
+                robot.frontLeftDrive.getCurrentPosition(),
+                robot.frontRightDrive.getCurrentPosition(),
+                robot.backLeftDrive.getCurrentPosition(),
+                robot.backRightDrive.getCurrentPosition());
+
+        telemetry.update();
+        sleep(2000);  // Pause to allow for viewing
+
+
 
 
         /*
@@ -192,15 +220,15 @@ public class ForgeAutoBasic extends LinearOpMode {
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newLeftTarget = robot.frontRightDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget = robot.frontLeftDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newRightTarget = robot.frontRightDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newLeftTarget = robot.frontLeftDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
             newRightTarget = robot.backRightDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            newRightTarget = robot.backLeftDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newLeftTarget = robot.backLeftDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
 
             robot.frontLeftDrive.setTargetPosition(newLeftTarget);
             robot.frontRightDrive.setTargetPosition(newRightTarget);
             robot.backLeftDrive.setTargetPosition(newLeftTarget);
-            robot.backRightDrive.setTargetPosition(newLeftTarget);
+            robot.backRightDrive.setTargetPosition(newRightTarget);
 
             // Turn On RUN_TO_POSITION
             robot.frontLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -252,22 +280,116 @@ public class ForgeAutoBasic extends LinearOpMode {
 
             //  sleep(250);   // optional pause after each move
         }
+
+
     }
+
+    enum Direction
+    {
+        LEFT,RIGHT;
+    }
+    public void encoderDriveStrafe(double speed, Direction direction, double inches, double timeoutS)
+    {
+        int newLeftFrontTarget =0;
+        int newRightFrontTarget=0;
+        int newLeftBackTarget =0;
+        int newRightBackTarget=0;
+
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+
+            if (direction == Direction.LEFT)
+            {
+                // Determine new target position, and pass to motor controller
+                newRightFrontTarget = -(robot.frontRightDrive.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH));
+                newLeftFrontTarget =  robot.frontLeftDrive.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
+                newRightBackTarget = robot.backRightDrive.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
+                newLeftBackTarget = -(robot.backLeftDrive.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH));
+            }
+            if (direction == Direction.RIGHT)
+            {
+                // Determine new target position, and pass to motor controller
+                newRightFrontTarget = robot.frontRightDrive.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
+                newLeftFrontTarget =  -(robot.frontLeftDrive.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH));
+                newRightBackTarget = -(robot.backRightDrive.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH));
+                newLeftBackTarget = robot.backLeftDrive.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
+            }
+
+            robot.frontLeftDrive.setTargetPosition(newLeftFrontTarget);
+            robot.frontRightDrive.setTargetPosition(newRightFrontTarget);
+            robot.backLeftDrive.setTargetPosition(newLeftBackTarget);
+            robot.backRightDrive.setTargetPosition(newRightBackTarget);
+
+            // Turn On RUN_TO_POSITION
+            robot.frontLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.frontRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.backLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.backRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            // *** ADD OTHER Motors
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+            robot.frontLeftDrive.setPower(Math.abs(speed));
+            robot.frontRightDrive.setPower(Math.abs(speed));
+            robot.backLeftDrive.setPower(Math.abs(speed));
+            robot.backRightDrive.setPower(Math.abs(speed));
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+            // its target position, the motion will stop.  This is "safer" in the event that the robot will
+            // always end the motion as soon as possible.
+            // However, if you require that BOTH motors have finished their moves before the robot continues
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (robot.frontLeftDrive.isBusy() && robot.frontRightDrive.isBusy() & robot.backLeftDrive.isBusy() & robot.backRightDrive.isBusy())) {
+
+                // Display it for the driver.
+                telemetry.addData("Path1", "Running to %7d :%7d", newLeftFrontTarget, newRightFrontTarget);
+                telemetry.addData("Path2", "Running at %7d :%7d :%7d :%7d",
+                        robot.frontLeftDrive.getCurrentPosition(),
+                        robot.frontRightDrive.getCurrentPosition(),
+                        robot.backLeftDrive.getCurrentPosition(),
+                        robot.backRightDrive.getCurrentPosition()
+                );
+                telemetry.update();
+            }
+
+            // Stop all motion;
+            robot.frontLeftDrive.setPower(0);
+            robot.frontRightDrive.setPower(0);
+            robot.backLeftDrive.setPower(0);
+            robot.backRightDrive.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            robot.frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+            //  sleep(250);   // optional pause after each move
+        }
+
+    }
+
     private void strafeRight ()
     {
-        robot.frontRightDrive.setPower(.90);
-        robot.frontLeftDrive.setPower(-.90);
-        robot.backRightDrive.setPower(-.90);
-        robot.backLeftDrive.setPower(.90);
+        robot.frontRightDrive.setPower(.30);
+        robot.frontLeftDrive.setPower(-.60);
+        robot.backRightDrive.setPower(-.60);
+        robot.backLeftDrive.setPower(.30);
     }
 
 
     private void strafeLeft ()
     {
-        robot.frontRightDrive.setPower(-.90);
-        robot.frontLeftDrive.setPower(.90);
-        robot.backRightDrive.setPower(.90);
-        robot.backLeftDrive.setPower(-.90);
+        robot.frontRightDrive.setPower(-.30);
+        robot.frontLeftDrive.setPower(.60);
+        robot.backRightDrive.setPower(.60);
+        robot.backLeftDrive.setPower(-.30);
     }
 
     private void strafeForward ()
