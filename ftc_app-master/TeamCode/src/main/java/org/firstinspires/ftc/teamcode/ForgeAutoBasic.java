@@ -88,21 +88,81 @@ public class ForgeAutoBasic extends LinearOpMode {
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.8;
     static final double     TURN_SPEED              = 0.5;
+    ColorSensor sensorColor;
+
+
 
     @Override
     public void runOpMode() {
 
         robot.init(hardwareMap);
+        robot.swivelArm.setPosition(.80);
+        robot.jewelSplit.setPosition(.93);
+        robot.phoneSpin.setPosition(.40);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
 
+          //Put arm down
+        robot.jewelSplit.setPosition(.10);
+
+        //color sensor--read jewels
+        sensorColor = hardwareMap.get(ColorSensor.class, "js_Color");
+
+
+        // hsvValues is an array that will hold the hue, saturation, and value information.
+        float hsvValues[] = {0F, 0F, 0F};
+
+        // values is a reference to the hsvValues array.
+        final float values[] = hsvValues;
+
+        // sometimes it helps to multiply the raw RGB values with a scale factor
+        // to amplify/attentuate the measured values.
+        final double SCALE_FACTOR = 255;
+        Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
+                (int) (sensorColor.green() * SCALE_FACTOR),
+                (int) (sensorColor.blue() * SCALE_FACTOR),
+                hsvValues);
+
+        // send the info back to driver station using telemetry function.
+        //  telemetry.addData("Distance (cm)",
+        //          String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
+        telemetry.addData("Alpha", sensorColor.alpha());
+        telemetry.addData("Red  ", sensorColor.red());
+        telemetry.addData("Green", sensorColor.green());
+        telemetry.addData("Blue ", sensorColor.blue());
+        telemetry.addData("Hue", hsvValues[0]);
+        telemetry.update();
+        sleep(1000);
+
+        //Move swivel right/left
+        if (sensorColor.red() > sensorColor.blue()) {
+            //encoderDrive(DRIVE_SPEED,  -1.5,  -1.5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+            robot.swivelArm.setPosition(.60);
+            sleep(500);
+            robot.swivelArm.setPosition(.77);
+            sleep(1000);
+            robot.swivelArm.setPosition(.80);
+            robot.jewelSplit.setPosition(.93);
+
+        } else {
+            //encoderDrive(DRIVE_SPEED,  1.5   ,  1.5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+            robot.swivelArm.setPosition(1);
+            sleep(500);
+            robot.swivelArm.setPosition(.83);
+            sleep(1000);
+            robot.swivelArm.setPosition(.80);
+            robot.jewelSplit.setPosition(.93);
+
+        }
+
+        // *** JEWEL PROCESS COMPLETE
+
         robot.frontRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.frontLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.backLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.backRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
@@ -110,10 +170,10 @@ public class ForgeAutoBasic extends LinearOpMode {
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0", "Starting at %7d :%7d",
-                robot.frontLeftDrive.getCurrentPosition(),
-                robot.frontRightDrive.getCurrentPosition(),
-                robot.backLeftDrive.getCurrentPosition(),
-                robot.backRightDrive.getCurrentPosition());
+        robot.frontLeftDrive.getCurrentPosition(),
+        robot.frontRightDrive.getCurrentPosition(),
+        robot.backLeftDrive.getCurrentPosition(),
+        robot.backRightDrive.getCurrentPosition());
 
         telemetry.update();
         sleep(3000);  // Pause to allow for viewing
@@ -126,44 +186,50 @@ public class ForgeAutoBasic extends LinearOpMode {
         robot.backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Drive off platform
-        encoderDrive(.4, 2, 2, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(.2, 19, 17, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        sleep(2000);
+        // Sorta Center = 18.5,17 @ .2
 
-        // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0", "Starting at %7d :%7d",
-                robot.frontLeftDrive.getCurrentPosition(),
-                robot.frontRightDrive.getCurrentPosition(),
-                robot.backLeftDrive.getCurrentPosition(),
-                robot.backRightDrive.getCurrentPosition());
+        //release glyph
+        robot.giLeft.setPosition(.25);
+        robot.giRight.setPosition(.75);
 
-        telemetry.update();
-        sleep(3000);  // Pause to allow for viewing
+        sleep(1500);
 
+        robot.giLeft.setPosition(.5); // Stop
+        robot.giRight.setPosition(.5); //Stop
+
+        encoderDrive(.2, .75, -.75, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        sleep(2000);
+
+        encoderDrive(.2, 1.5, 1.5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        sleep(2000);
 
         // Drive to Jewel box
-        encoderDrive(.4, 26, 26, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+            /*encoderDrive(.4, 26, 26, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+//DRIVE TO JEWEL BOX NEEDS TO BE CHANGED TO ACCOUNT FOR NEW ADDED DISTANCE
+            // Send telemetry message to indicate successful Encoder reset
+            telemetry.addData("Path0", "Starting at %7d :%7d",
+                    robot.frontLeftDrive.getCurrentPosition(),
+                    robot.frontRightDrive.getCurrentPosition(),
+                    robot.backLeftDrive.getCurrentPosition(),
+                    robot.backRightDrive.getCurrentPosition());
 
-        // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0", "Starting at %7d :%7d",
-                robot.frontLeftDrive.getCurrentPosition(),
-                robot.frontRightDrive.getCurrentPosition(),
-                robot.backLeftDrive.getCurrentPosition(),
-                robot.backRightDrive.getCurrentPosition());
+            telemetry.update();
+            sleep(3000);  // Pause to allow for viewing
 
-        telemetry.update();
-        sleep(3000);  // Pause to allow for viewing
+            encoderDriveStrafe(.4, Direction.LEFT, 10, 5.0);
 
-        encoderDriveStrafe(.4,Direction.LEFT,10,5.0);
+            // Send telemetry message to indicate successful Encoder reset
+            telemetry.addData("Path0", "Starting at %7d :%7d",
+                    robot.frontLeftDrive.getCurrentPosition(),
+                    robot.frontRightDrive.getCurrentPosition(),
+                    robot.backLeftDrive.getCurrentPosition(),
+                    robot.backRightDrive.getCurrentPosition());
 
-        // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0", "Starting at %7d :%7d",
-                robot.frontLeftDrive.getCurrentPosition(),
-                robot.frontRightDrive.getCurrentPosition(),
-                robot.backLeftDrive.getCurrentPosition(),
-                robot.backRightDrive.getCurrentPosition());
-
-        telemetry.update();
-        sleep(2000);  // Pause to allow for viewing
-
+            telemetry.update();
+            sleep(2000);  // Pause to allow for viewing
+*/
 
 
 
@@ -198,7 +264,7 @@ public class ForgeAutoBasic extends LinearOpMode {
         //telemetry.addData("Path", "Complete");
         //telemetry.update();
 
-    }
+
 
     /*
      *  Method to perfmorm a relative move, based on encoder counts.
@@ -208,6 +274,7 @@ public class ForgeAutoBasic extends LinearOpMode {
      *  2) Move runs out of time
      *  3) Driver stops the opmode running.
      */
+
     }
 
     public void encoderDrive(double speed,

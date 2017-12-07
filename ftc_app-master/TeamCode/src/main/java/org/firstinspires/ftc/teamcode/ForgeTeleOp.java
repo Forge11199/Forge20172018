@@ -123,21 +123,21 @@ public class ForgeTeleOp extends OpMode{
         // Glyph IN
         if (gamepad2.a)         // Glyph Out
         {
-            robot.giLeft.setPosition(.60); //robot.giLeft.setPosition(.75);
-            robot.giRight.setPosition(.40);
+            robot.giLeft.setPosition(.25);
+            robot.giRight.setPosition(.75);
         }
 
         if (gamepad2.y)         // Glyph In
         {
-            robot.giLeft.setPosition(.40); //robot.giLeft.setPosition(.75);
-            robot.giRight.setPosition(.60);
+            robot.giLeft.setPosition(.75);
+            robot.giRight.setPosition(.25);
 
         }
 
         if (gamepad2.x)         // Glyph Stop
         {
-            robot.giLeft.setPosition(.51); //robot.giLeft.setPosition(.50);
-            robot.giRight.setPosition(.51);
+            robot.giLeft.setPosition(.50);//with new servo
+            robot.giRight.setPosition(.50);
         }
 
         if (gamepad2.b)
@@ -171,19 +171,19 @@ public class ForgeTeleOp extends OpMode{
 
     private void strafeRight ()
     {
-        robot.frontRightDrive.setPower(.90);
-        robot.frontLeftDrive.setPower(-.90);
-        robot.backRightDrive.setPower(-.90);
-        robot.backLeftDrive.setPower(.90);
+        robot.frontRightDrive.setPower(1.0);
+        robot.frontLeftDrive.setPower(-1.0);
+        robot.backRightDrive.setPower(-1.0);
+        robot.backLeftDrive.setPower(1.0);
     }
 
 
     private void strafeLeft ()
     {
-        robot.frontRightDrive.setPower(-.90);
-        robot.frontLeftDrive.setPower(.90);
-        robot.backRightDrive.setPower(.90);
-        robot.backLeftDrive.setPower(-.90);
+        robot.frontRightDrive.setPower(-1.0);
+        robot.frontLeftDrive.setPower(1.0);
+        robot.backRightDrive.setPower(1.0);
+        robot.backLeftDrive.setPower(-1.0);
     }
 
     private void strafeForward ()
