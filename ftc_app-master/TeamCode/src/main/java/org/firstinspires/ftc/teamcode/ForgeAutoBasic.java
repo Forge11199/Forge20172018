@@ -90,6 +90,11 @@ public class ForgeAutoBasic extends LinearOpMode {
     static final double     TURN_SPEED              = 0.5;
     ColorSensor sensorColor;
 
+    // Vulforia Variables
+    public static final String TAG = "Vuforia VuMark Sample";
+    OpenGLMatrix lastLocation = null;
+    VuforiaLocalizer vuforia;
+    RelicRecoveryVuMark vuMark;
 
 
     @Override
@@ -103,6 +108,63 @@ public class ForgeAutoBasic extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
+        robot.phoneSpin.setPosition(.73);
+
+
+        //ADD VUFORIA READING HERE!
+// ******* VuMarks Setup ******************************
+        // Vulforia Code
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+
+        //FORGE 11199 KEY
+        parameters.vuforiaLicenseKey = "Abalq3b/////AAAAGU+HLfwN7Ex0h9eBtGQ1tksoHCf8D3UiB+BOWeM8fTLhsr+a+ysYvifJvnfDyPrJuB8RcCXq2MtudAaviVZdV2nGw8Ny1QuA8k4RPCzqta5F/4jBapj/p0OURZ3Lue0DGQmUXGZDihyH9SetQEeHYRKV3U1U/PITxJnn6yOW3M6Q3AAZXFae893SR23xFq0fFD0FsiMp6DX7b54pMF2AZofVZ47wBzzF+HMy9FKaf3XRiLiW8RFzg/fIMCUq+79fyk9W3ekXDJGwzmFp8mdbCyjwto8mYhA4ZfKfdkK3wJcFurFiu4i8a902DCtW+V/G1z+G0I1X61jW4UX50D6JQYGLVVXYRd4Fxgm062NR6P2q";
+
+
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+
+        /**
+         * Load the data set containing the VuMarks for Relic Recovery. There's only one trackable
+         * in this data set: all three of the VuMarks in the game were created from this one template,
+         * but differ in their instance id information.
+         * @see VuMarkInstanceId
+         */
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+        // ******* VuMarks Setup ************************
+
+
+        relicTrackables.activate();   // Track VuMarks
+
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 5.0)) {
+            // ********************* VUMARK SCAN ****************************
+
+            vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+                telemetry.addData("VuMark", "%s visible", vuMark);
+                telemetry.update();
+                sleep(2000);  // REMOVBE
+
+                break;
+            } else {
+                telemetry.addData("VuMark", "not visible");
+                telemetry.update();
+                sleep(2000);  // REMOVBE
+            }
+
+
+        }
+        relicTrackables.deactivate();
+
+        // Use ViewMark color to determine where to place Glyph
+        // ********************* VUMARK SCAN ****************************
+
+
+        //--END VUFORIA CODE--
+        robot.phoneSpin.setPosition(.40);
 
           //Put arm down
         robot.jewelSplit.setPosition(.10);
@@ -144,6 +206,8 @@ public class ForgeAutoBasic extends LinearOpMode {
             robot.swivelArm.setPosition(.77);
             sleep(1000);
             robot.swivelArm.setPosition(.80);
+            robot.jewelSplit.setPosition(.80);
+            sleep(500);
             robot.jewelSplit.setPosition(.93);
 
         } else {
@@ -153,6 +217,8 @@ public class ForgeAutoBasic extends LinearOpMode {
             robot.swivelArm.setPosition(.83);
             sleep(1000);
             robot.swivelArm.setPosition(.80);
+            robot.jewelSplit.setPosition(.80);
+            sleep(500);
             robot.jewelSplit.setPosition(.93);
 
         }
@@ -164,19 +230,25 @@ public class ForgeAutoBasic extends LinearOpMode {
         robot.backLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.backRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        // Send telemetry message to signify robot waiting;
+        telemetry.addData("Current POS",  "Running at %7d :%7d :%7d :%7d",
+                robot.frontLeftDrive.getCurrentPosition(),
+                robot.frontRightDrive.getCurrentPosition(),
+                robot.backLeftDrive.getCurrentPosition(),
+                robot.backRightDrive.getCurrentPosition()
+        );
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
 
-        // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0", "Starting at %7d :%7d",
-        robot.frontLeftDrive.getCurrentPosition(),
-        robot.frontRightDrive.getCurrentPosition(),
-        robot.backLeftDrive.getCurrentPosition(),
-        robot.backRightDrive.getCurrentPosition());
 
-        telemetry.update();
         sleep(3000);  // Pause to allow for viewing
+
+        telemetry.addData("Current POS",  "Running at %7d :%7d :%7d :%7d",
+                robot.frontLeftDrive.getCurrentPosition(),
+                robot.frontRightDrive.getCurrentPosition(),
+                robot.backLeftDrive.getCurrentPosition(),
+                robot.backRightDrive.getCurrentPosition()
+        );
+        telemetry.update();
 
 
 
@@ -185,10 +257,43 @@ public class ForgeAutoBasic extends LinearOpMode {
         robot.backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // Drive off platform
-        encoderDrive(.2, 19, 17, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        sleep(2000);
-        // Sorta Center = 18.5,17 @ .2
+
+      if (vuMark==RelicRecoveryVuMark.UNKNOWN ||vuMark==RelicRecoveryVuMark.CENTER) {
+          // Drive off platform
+          //   encoderDrive(.2, 19, 17, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+          encoderDrive(.2, 16, 16, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+          encoderDrive(.2, 4, 3, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+          sleep(2000);
+          // Sorta Center = 18.5,17 @ .2
+          // ??? 26/19
+      }
+
+       if (vuMark==RelicRecoveryVuMark.LEFT) {
+         // Drive off platform
+           encoderDrive(.2, 14.5, 14.5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+           encoderDrive(.2,8 , 14, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+           sleep(2000);
+           // Sorta Center = 18.5,17 @ .2
+       }
+
+
+        if (vuMark==RelicRecoveryVuMark.RIGHT) {
+            // Drive off platform
+            encoderDrive(.2, 17.25, 17.25, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+            //encoderDrive(.2, 3, 5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+            sleep(2000);
+            // Sorta Center = 18.5,17 @ .2
+        }
+
+        telemetry.addData("Current POS",  "Running at %7d :%7d :%7d :%7d",
+                robot.frontLeftDrive.getCurrentPosition(),
+                robot.frontRightDrive.getCurrentPosition(),
+                robot.backLeftDrive.getCurrentPosition(),
+                robot.backRightDrive.getCurrentPosition()
+        );
+        telemetry.update();
+
+
 
         //release glyph
         robot.giLeft.setPosition(.25);
@@ -199,15 +304,19 @@ public class ForgeAutoBasic extends LinearOpMode {
         robot.giLeft.setPosition(.5); // Stop
         robot.giRight.setPosition(.5); //Stop
 
-        encoderDrive(.2, .75, -.75, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        sleep(2000);
 
-        encoderDrive(.2, 1.5, 1.5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        sleep(2000);
+        encoderDrive(.2, .75, -.75, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        sleep(1000);
+
+        encoderDrive(.2, 1.0, 1.0, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        sleep(1000);
+
+        encoderDrive(.2, -.5, -.5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        sleep(1000);
 
         // Drive to Jewel box
             /*encoderDrive(.4, 26, 26, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-//DRIVE TO JEWEL BOX NEEDS TO BE CHANGED TO ACCOUNT FOR NEW ADDED DISTANCE
+            //DRIVE TO JEWEL BOX NEEDS TO BE CHANGED TO ACCOUNT FOR NEW ADDED DISTANCE
             // Send telemetry message to indicate successful Encoder reset
             telemetry.addData("Path0", "Starting at %7d :%7d",
                     robot.frontLeftDrive.getCurrentPosition(),
