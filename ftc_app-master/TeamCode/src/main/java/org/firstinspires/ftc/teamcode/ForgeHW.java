@@ -116,8 +116,8 @@ ames have been configured on the robot:
 
         //Set all servo to zero and another unknown number for the moment
         //jewelSplit.setPosition(1);
-        giRight.setPosition(.51);   // Stop Right
-        giLeft.setPosition(.51);    // giLeft.setPosition(.51);
+        giRight.setPosition(.50);   // Stop Right
+        giLeft.setPosition(.50);    // giLeft.setPosition(.51);
 
         liftLeft.setPosition(.31);   // Set to servo 1bottom,
         liftRight.setPosition(.34);    //Set to servo 2 bottom

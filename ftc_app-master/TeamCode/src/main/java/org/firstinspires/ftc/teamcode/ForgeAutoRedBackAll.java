@@ -261,8 +261,10 @@ public class ForgeAutoRedBackAll extends LinearOpMode {
       if (vuMark==RelicRecoveryVuMark.UNKNOWN ||vuMark==RelicRecoveryVuMark.CENTER) {
           // Drive off platform
           //   encoderDrive(.2, 19, 17, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-          encoderDrive(.2, 16, 16, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-          encoderDrive(.2, 5, 4, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+          encoderDrive(.3, 16, 17.5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+          encoderDrive(.4, 6, -6, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+          encoderDrive(.3,6 , 6, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+
           sleep(2000);
           // Sorta Center = 18.5,17 @ .2
           // ??? 26/19
@@ -270,9 +272,9 @@ public class ForgeAutoRedBackAll extends LinearOpMode {
 
        if (vuMark==RelicRecoveryVuMark.LEFT) {
          // Drive off platform
-           encoderDrive(.2, 15, 15, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-           encoderDrive(.2,18 , 12, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-           encoderDrive(.2,1 , 1, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+           encoderDrive(.2, 16, 19, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+           encoderDrive(.4,6 , -6, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+           encoderDrive(.2,5 , 5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
 
            sleep(2000);
            // Sorta Center = 18.5,17 @ .2
@@ -281,7 +283,10 @@ public class ForgeAutoRedBackAll extends LinearOpMode {
 
         if (vuMark==RelicRecoveryVuMark.RIGHT) {
             // Drive off platform
-            encoderDrive(.2, 17.25, 17.25, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+            encoderDrive(.2, 16.00, 18.00, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+            encoderDrive(.2, -1.00, 1.00, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+            encoderDrive(.2, 1.50, 1.50, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+
             //encoderDrive(.2, 3, 5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
             sleep(2000);
             // Sorta Center = 18.5,17 @ .2
@@ -391,22 +396,24 @@ public class ForgeAutoRedBackAll extends LinearOpMode {
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
                              double timeoutS) {
-        int newLeftTarget;
-        int newRightTarget;
+        int newLeftFrontTarget;
+        int newLeftBackTarget;
+        int newRightFrontTarget;
+        int newRightBackTarget;
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newRightTarget = robot.frontRightDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newLeftTarget = robot.frontLeftDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            newRightTarget = robot.backRightDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            newLeftTarget = robot.backLeftDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newRightFrontTarget = robot.frontRightDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newLeftFrontTarget = robot.frontLeftDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newRightBackTarget = robot.backRightDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newLeftBackTarget = robot.backLeftDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
 
-            robot.frontLeftDrive.setTargetPosition(newLeftTarget);
-            robot.frontRightDrive.setTargetPosition(newRightTarget);
-            robot.backLeftDrive.setTargetPosition(newLeftTarget);
-            robot.backRightDrive.setTargetPosition(newRightTarget);
+            robot.frontLeftDrive.setTargetPosition(newLeftFrontTarget);
+            robot.frontRightDrive.setTargetPosition(newRightFrontTarget);
+            robot.backLeftDrive.setTargetPosition(newLeftBackTarget);
+            robot.backRightDrive.setTargetPosition(newRightBackTarget);
 
             // Turn On RUN_TO_POSITION
             robot.frontLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -433,13 +440,13 @@ public class ForgeAutoRedBackAll extends LinearOpMode {
                    (robot.frontLeftDrive.isBusy() && robot.frontRightDrive.isBusy() & robot.backLeftDrive.isBusy() & robot.backRightDrive.isBusy())) {
 
                 // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
+                telemetry.addData("Path1",  "Running to %7d :%7d:%7d :%7d", newLeftFrontTarget,  newRightFrontTarget,newLeftBackTarget,newRightBackTarget);
                 telemetry.addData("Path2",  "Running at %7d :%7d :%7d :%7d",
-                                            robot.frontLeftDrive.getCurrentPosition(),
-                                            robot.frontRightDrive.getCurrentPosition(),
-                                            robot.backLeftDrive.getCurrentPosition(),
-                                            robot.backRightDrive.getCurrentPosition()
-                                                                                    );
+                        robot.frontLeftDrive.getCurrentPosition(),
+                        robot.frontRightDrive.getCurrentPosition(),
+                        robot.backLeftDrive.getCurrentPosition(),
+                        robot.backRightDrive.getCurrentPosition()
+                );
                 telemetry.update();
             }
 
