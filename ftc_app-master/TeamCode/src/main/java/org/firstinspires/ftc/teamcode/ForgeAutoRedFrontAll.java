@@ -73,23 +73,22 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Forge Red: Auto Full", group="Auto")
+@Autonomous(name="Forge Red Front:All", group="Auto")
 
-public class ForgeAutoRedFull extends LinearOpMode {
+public class ForgeAutoRedFrontAll extends LinearOpMode {
 
     /* Declare OpMode members. */
     ForgeHW         robot   = new ForgeHW();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
-    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
+    static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: TETRIX Motor Encoder 1440
+    static final double     DRIVE_GEAR_REDUCTION    = .66 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.8;
     static final double     TURN_SPEED              = 0.5;
     ColorSensor sensorColor;
-    //DistanceSensor sensorDistance;
 
     // Vulforia Variables
     public static final String TAG = "Vuforia VuMark Sample";
@@ -97,19 +96,22 @@ public class ForgeAutoRedFull extends LinearOpMode {
     VuforiaLocalizer vuforia;
     RelicRecoveryVuMark vuMark;
 
+
     @Override
     public void runOpMode() {
 
-        // KNO3 Transition
-        AutoTransitioner.transitionOnStop(this, "Forge TeleOp");
-        //
-
-        /*
-         * Initialize the drive system variables.
-         * The init() method of the hardware class does all the work here
-         */
         robot.init(hardwareMap);
+        robot.swivelArm.setPosition(.80);
+        robot.jewelSplit.setPosition(.93);
+        robot.phoneSpin.setPosition(.40);
 
+        // Wait for the game to start (driver presses PLAY)
+        waitForStart();
+
+        robot.phoneSpin.setPosition(.73);
+
+
+        //ADD VUFORIA READING HERE!
         // ******* VuMarks Setup ******************************
         // Vulforia Code
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -133,61 +135,42 @@ public class ForgeAutoRedFull extends LinearOpMode {
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
         // ******* VuMarks Setup ************************
 
-        // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Resetting Encoders");    //
-        telemetry.update();
 
-
-
-        // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0",  "Starting at %7d :%7d",
-                          robot.frontLeftDrive.getCurrentPosition(),
-                          robot.frontRightDrive.getCurrentPosition(),
-                          robot.backLeftDrive.getCurrentPosition(),
-                          robot.backLeftDrive.getCurrentPosition());
-
-        telemetry.update();
-
-        // Wait for the game to start (driver presses PLAY)
-        waitForStart();
-
-        /*
         relicTrackables.activate();   // Track VuMarks
 
-        while (opModeIsActive()) {
-
-
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 5.0)) {
             // ********************* VUMARK SCAN ****************************
+
             vuMark = RelicRecoveryVuMark.from(relicTemplate);
             if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
                 telemetry.addData("VuMark", "%s visible", vuMark);
+                telemetry.update();
+                sleep(2000);  // REMOVBE
+
+                break;
             } else {
                 telemetry.addData("VuMark", "not visible");
+                telemetry.update();
+                sleep(2000);  // REMOVBE
             }
 
-            telemetry.update();
-
-            // Use ViewMark color to determine where to place Glyph
-            // ********************* VUMARK SCAN ****************************
 
         }
-        */
-        // Face Camera Forward before Jewel
-        robot.phoneSpin.setPosition(.35);
-        sleep(500);
+        relicTrackables.deactivate();
 
-        // Move Lift To Middle
-        robot.liftLeft.setPosition(.44);
-        robot.liftRight.setPosition(.21);
-        sleep(1000);
+        // Use ViewMark color to determine where to place Glyph
+        // ********************* VUMARK SCAN ****************************
 
 
+        //--END VUFORIA CODE--
+        robot.phoneSpin.setPosition(.40);
 
-        robot.jewelSplit.setPosition(.15);
-        sleep(2000);    //put jewel splitter down
+          //Put arm down
+        robot.jewelSplit.setPosition(.10);
 
+        //color sensor--read jewels
         sensorColor = hardwareMap.get(ColorSensor.class, "js_Color");
-
 
         // hsvValues is an array that will hold the hue, saturation, and value information.
         float hsvValues[] = {0F, 0F, 0F};
@@ -214,12 +197,59 @@ public class ForgeAutoRedFull extends LinearOpMode {
         telemetry.update();
         sleep(1000);
 
+        //Move swivel right/left
+        if (sensorColor.red() > sensorColor.blue()) {
+            //encoderDrive(DRIVE_SPEED,  -1.5,  -1.5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+            robot.swivelArm.setPosition(.60);
+            sleep(500);
+            robot.swivelArm.setPosition(.77);
+            sleep(1000);
+            robot.swivelArm.setPosition(.80);
+            robot.jewelSplit.setPosition(.80);
+            sleep(500);
+            robot.jewelSplit.setPosition(.93);
 
+        } else {
+            //encoderDrive(DRIVE_SPEED,  1.5   ,  1.5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+            robot.swivelArm.setPosition(1);
+            sleep(500);
+            robot.swivelArm.setPosition(.83);
+            sleep(1000);
+            robot.swivelArm.setPosition(.80);
+            robot.jewelSplit.setPosition(.80);
+            sleep(500);
+            robot.jewelSplit.setPosition(.93);
+
+        }
+        sleep(2000); // Wait for platform to stop shaking
+
+        // *** JEWEL PROCESS COMPLETE
 
         robot.frontRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.frontLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.backLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.backRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        telemetry.addData("Current POS",  "Running at %7d :%7d :%7d :%7d",
+                robot.frontLeftDrive.getCurrentPosition(),
+                robot.frontRightDrive.getCurrentPosition(),
+                robot.backLeftDrive.getCurrentPosition(),
+                robot.backRightDrive.getCurrentPosition()
+        );
+        telemetry.addData("Status", "Resetting Encoders");    //
+        telemetry.update();
+
+
+        sleep(3000);  // Pause to allow for viewing
+
+        telemetry.addData("Current POS",  "Running at %7d :%7d :%7d :%7d",
+                robot.frontLeftDrive.getCurrentPosition(),
+                robot.frontRightDrive.getCurrentPosition(),
+                robot.backLeftDrive.getCurrentPosition(),
+                robot.backRightDrive.getCurrentPosition()
+        );
+        telemetry.update();
+
 
         robot.frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -227,72 +257,67 @@ public class ForgeAutoRedFull extends LinearOpMode {
         robot.backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
-        // Use MAth Positive and Negative, Subtract into one number and determine
-        // Blue Alliance
-        boolean forward=true;
-        if (sensorColor.red() > sensorColor.blue()) {
-            encoderDrive(.4,  -1.5,  -1.5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-            forward=false;
-            /*
-            robot.frontRightDrive.setPower(-.25);
-            robot.frontLeftDrive.setPower(-.25);
-            robot.backRightDrive.setPower(-.25);
-            robot.backLeftDrive.setPower(-.25);
-            */
+        // Drive Forward to spot
+        encoderDrive(.2, 18, 14, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
 
-            sleep(500);
-            robot.frontRightDrive.setPower(0);
-            robot.frontLeftDrive.setPower(0);
-            robot.backRightDrive.setPower(0);
-            robot.backLeftDrive.setPower(0);
-        } else {
-            encoderDrive(.4,  1.5   ,  1.5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-            forward=true;
-            /*
-            robot.frontRightDrive.setPower(.25);
-             */
-            /*
-            robot.frontLeftDrive.setPower(.25);
-            robot.backRightDrive.setPower(.25);
-            robot.backLeftDrive.setPower(.25);
-            */
-            sleep(500);
-            robot.frontRightDrive.setPower(0);
-            robot.frontLeftDrive.setPower(0);
-            robot.backRightDrive.setPower(0);
-            robot.backLeftDrive.setPower(0);
+
+        // Based on View deliver Gliph
+        if (vuMark==RelicRecoveryVuMark.UNKNOWN ||vuMark==RelicRecoveryVuMark.CENTER) {
+            // Drive off platform
+            //   encoderDrive(.2, 19, 17, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+            encoderDrive(.2, 16, 16, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+            encoderDrive(.2, 5, 4, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+            sleep(2000);
+            // Sorta Center = 18.5,17 @ .2
+            // ??? 26/19
         }
 
+       if (vuMark==RelicRecoveryVuMark.LEFT) {
+         // Drive off platform
+           encoderDrive(.2, 14.5, 14.5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+           encoderDrive(.2,8 , 14, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+           sleep(2000);
 
-        robot.jewelSplit.setPosition(1);
-        sleep(2000);
+       }
 
-        double extraDistance = 0; //22 ;// Extra distance to get starting point
-        double distanceToTravelL = extraDistance + 6 ; // Total Distance to Sweet Spot
-        double distanceToTravelR = extraDistance + 4.0   ; // Total Distance to Sweet Spot
 
-        if (forward=false)
-        {
-            encoderDrive(.4, distanceToTravelL, distanceToTravelR, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        if (vuMark==RelicRecoveryVuMark.RIGHT) {
+            // Drive off platform
+            encoderDrive(.2, 17.25, 17.25, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+            //encoderDrive(.2, 3, 5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+            sleep(2000);
+
         }
 
-        else
-        {
-            encoderDrive(.4, distanceToTravelL+5, distanceToTravelR+5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        }
-        //strafeLeft();
-        //sleep(100);
+        telemetry.addData("Current POS",  "Running at %7d :%7d :%7d :%7d",
+                robot.frontLeftDrive.getCurrentPosition(),
+                robot.frontRightDrive.getCurrentPosition(),
+                robot.backLeftDrive.getCurrentPosition(),
+                robot.backRightDrive.getCurrentPosition()
+        );
+        telemetry.update();
 
-        //strafeForward();
-        //sleep(100);
 
-        liftServoDown();
-        sleep(200);
 
-        robot.giLeft.setPosition(.40); //robot.giLeft.setPosition(.40);
-        robot.giRight.setPosition(.60);
+        //release glyph
+        robot.giLeft.setPosition(.25);
+        robot.giRight.setPosition(.75);
 
-        sleep(3000);
+        sleep(1500);
+
+        robot.giLeft.setPosition(.5); // Stop
+        robot.giRight.setPosition(.5); //Stop
+
+
+        encoderDrive(.2, .75, -.75, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        sleep(1000);
+
+        encoderDrive(.2, 1.0, 1.0, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        sleep(1000);
+
+        encoderDrive(.2, -.5, -.5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        sleep(1000);
+
 
         // Drive with Encoder
         // Step through each leg of the path,
@@ -303,19 +328,10 @@ public class ForgeAutoRedFull extends LinearOpMode {
 
 
 
-        //telemetry.addData("Path", "Complete");
-        //telemetry.update();
+
 
     }
 
-    /*
-     *  Method to perfmorm a relative move, based on encoder counts.
-     *  Encoders are not reset as the move is based on the current position.
-     *  Move will stop if any of three conditions occur:
-     *  1) Move gets to the desired position
-     *  2) Move runs out of time
-     *  3) Driver stops the opmode running.
-     */
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
                              double timeoutS) {
@@ -326,15 +342,15 @@ public class ForgeAutoRedFull extends LinearOpMode {
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newLeftTarget = robot.frontRightDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget = robot.frontLeftDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newRightTarget = robot.frontRightDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newLeftTarget = robot.frontLeftDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
             newRightTarget = robot.backRightDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            newRightTarget = robot.backLeftDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newLeftTarget = robot.backLeftDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
 
             robot.frontLeftDrive.setTargetPosition(newLeftTarget);
             robot.frontRightDrive.setTargetPosition(newRightTarget);
             robot.backLeftDrive.setTargetPosition(newLeftTarget);
-            robot.backRightDrive.setTargetPosition(newLeftTarget);
+            robot.backRightDrive.setTargetPosition(newRightTarget);
 
             // Turn On RUN_TO_POSITION
             robot.frontLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -386,22 +402,116 @@ public class ForgeAutoRedFull extends LinearOpMode {
 
             //  sleep(250);   // optional pause after each move
         }
+
+
     }
+
+    enum Direction
+    {
+        LEFT,RIGHT;
+    }
+    public void encoderDriveStrafe(double speed, Direction direction, double inches, double timeoutS)
+    {
+        int newLeftFrontTarget =0;
+        int newRightFrontTarget=0;
+        int newLeftBackTarget =0;
+        int newRightBackTarget=0;
+
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+
+            if (direction == Direction.LEFT)
+            {
+                // Determine new target position, and pass to motor controller
+                newRightFrontTarget = -(robot.frontRightDrive.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH));
+                newLeftFrontTarget =  robot.frontLeftDrive.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
+                newRightBackTarget = robot.backRightDrive.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
+                newLeftBackTarget = -(robot.backLeftDrive.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH));
+            }
+            if (direction == Direction.RIGHT)
+            {
+                // Determine new target position, and pass to motor controller
+                newRightFrontTarget = robot.frontRightDrive.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
+                newLeftFrontTarget =  -(robot.frontLeftDrive.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH));
+                newRightBackTarget = -(robot.backRightDrive.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH));
+                newLeftBackTarget = robot.backLeftDrive.getCurrentPosition() + (int) (inches * COUNTS_PER_INCH);
+            }
+
+            robot.frontLeftDrive.setTargetPosition(newLeftFrontTarget);
+            robot.frontRightDrive.setTargetPosition(newRightFrontTarget);
+            robot.backLeftDrive.setTargetPosition(newLeftBackTarget);
+            robot.backRightDrive.setTargetPosition(newRightBackTarget);
+
+            // Turn On RUN_TO_POSITION
+            robot.frontLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.frontRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.backLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.backRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            // *** ADD OTHER Motors
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+            robot.frontLeftDrive.setPower(Math.abs(speed));
+            robot.frontRightDrive.setPower(Math.abs(speed));
+            robot.backLeftDrive.setPower(Math.abs(speed));
+            robot.backRightDrive.setPower(Math.abs(speed));
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+            // its target position, the motion will stop.  This is "safer" in the event that the robot will
+            // always end the motion as soon as possible.
+            // However, if you require that BOTH motors have finished their moves before the robot continues
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (robot.frontLeftDrive.isBusy() && robot.frontRightDrive.isBusy() & robot.backLeftDrive.isBusy() & robot.backRightDrive.isBusy())) {
+
+                // Display it for the driver.
+                telemetry.addData("Path1", "Running to %7d :%7d", newLeftFrontTarget, newRightFrontTarget);
+                telemetry.addData("Path2", "Running at %7d :%7d :%7d :%7d",
+                        robot.frontLeftDrive.getCurrentPosition(),
+                        robot.frontRightDrive.getCurrentPosition(),
+                        robot.backLeftDrive.getCurrentPosition(),
+                        robot.backRightDrive.getCurrentPosition()
+                );
+                telemetry.update();
+            }
+
+            // Stop all motion;
+            robot.frontLeftDrive.setPower(0);
+            robot.frontRightDrive.setPower(0);
+            robot.backLeftDrive.setPower(0);
+            robot.backRightDrive.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            robot.frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+            //  sleep(250);   // optional pause after each move
+        }
+
+    }
+
     private void strafeRight ()
     {
-        robot.frontRightDrive.setPower(.90);
-        robot.frontLeftDrive.setPower(-.90);
-        robot.backRightDrive.setPower(-.90);
-        robot.backLeftDrive.setPower(.90);
+        robot.frontRightDrive.setPower(.30);
+        robot.frontLeftDrive.setPower(-.60);
+        robot.backRightDrive.setPower(-.60);
+        robot.backLeftDrive.setPower(.30);
     }
 
 
     private void strafeLeft ()
     {
-        robot.frontRightDrive.setPower(-.90);
-        robot.frontLeftDrive.setPower(.90);
-        robot.backRightDrive.setPower(.90);
-        robot.backLeftDrive.setPower(-.90);
+        robot.frontRightDrive.setPower(-.30);
+        robot.frontLeftDrive.setPower(.60);
+        robot.backRightDrive.setPower(.60);
+        robot.backLeftDrive.setPower(-.30);
     }
 
     private void strafeForward ()

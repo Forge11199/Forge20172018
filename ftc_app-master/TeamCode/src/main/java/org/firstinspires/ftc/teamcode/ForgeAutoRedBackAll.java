@@ -73,9 +73,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Forge Red: Basic", group="Auto")
+@Autonomous(name="Forge Red Back:All", group="Auto")
 
-public class ForgeAutoBasic extends LinearOpMode {
+public class ForgeAutoRedBackAll extends LinearOpMode {
 
     /* Declare OpMode members. */
     ForgeHW         robot   = new ForgeHW();   // Use a Pushbot's hardware
@@ -222,7 +222,7 @@ public class ForgeAutoBasic extends LinearOpMode {
             robot.jewelSplit.setPosition(.93);
 
         }
-
+        sleep(2000); // Wait for platform to stop shaking
         // *** JEWEL PROCESS COMPLETE
 
         robot.frontRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -262,7 +262,7 @@ public class ForgeAutoBasic extends LinearOpMode {
           // Drive off platform
           //   encoderDrive(.2, 19, 17, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
           encoderDrive(.2, 16, 16, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-          encoderDrive(.2, 4, 3, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+          encoderDrive(.2, 5, 4, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
           sleep(2000);
           // Sorta Center = 18.5,17 @ .2
           // ??? 26/19
@@ -270,8 +270,10 @@ public class ForgeAutoBasic extends LinearOpMode {
 
        if (vuMark==RelicRecoveryVuMark.LEFT) {
          // Drive off platform
-           encoderDrive(.2, 14.5, 14.5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-           encoderDrive(.2,8 , 14, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+           encoderDrive(.2, 15, 15, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+           encoderDrive(.2,18 , 12, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+           encoderDrive(.2,1 , 1, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+
            sleep(2000);
            // Sorta Center = 18.5,17 @ .2
        }
