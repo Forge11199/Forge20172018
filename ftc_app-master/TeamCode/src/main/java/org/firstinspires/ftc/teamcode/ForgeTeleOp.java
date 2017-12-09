@@ -123,14 +123,14 @@ public class ForgeTeleOp extends OpMode{
         // Glyph IN
         if (gamepad2.a)         // Glyph Out
         {
-            robot.giLeft.setPosition(.25);
-            robot.giRight.setPosition(.75);
+            robot.giLeft.setPosition(.75);
+            robot.giRight.setPosition(.25);
         }
 
         if (gamepad2.y)         // Glyph In
         {
-            robot.giLeft.setPosition(.75);
-            robot.giRight.setPosition(.25);
+            robot.giLeft.setPosition(.25);
+            robot.giRight.setPosition(.75);
 
         }
 
