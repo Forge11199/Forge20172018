@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -44,12 +45,16 @@ ames have been configured on the robot:
     public Servo jewelSplit = null;
 
     /* Glyph intake mapping */
-    public Servo giLeft     = null;
-    public Servo giRight    = null;
+    //public Servo giLeft     = null;
+    //public Servo giRight    = null;
     public Servo liftLeft  = null;
     public Servo liftRight = null;
     public Servo phoneSpin = null;
     public Servo swivelArm  = null;
+
+    public DcMotor glyphIntakeLeft          = null;
+    public DcMotor glyphIntakeRight         = null;
+    public DigitalChannel glyphBump         = null;
 
     /* Sensor for jewel split */
     public NormalizedColorSensor jewelColor = null;
@@ -78,8 +83,8 @@ ames have been configured on the robot:
         backLeftDrive= hwMap.get(DcMotor.class, "back_left_drive");
 
         // Set Braking Mode
-        frontRightDrive.setZeroPowerBehavior((DcMotor.ZeroPowerBehavior.BRAKE));
-        frontLeftDrive.setZeroPowerBehavior((DcMotor.ZeroPowerBehavior.BRAKE));
+        //frontRightDrive.setZeroPowerBehavior((DcMotor.ZeroPowerBehavior.BRAKE));
+        //frontLeftDrive.setZeroPowerBehavior((DcMotor.ZeroPowerBehavior.BRAKE));
         backRightDrive.setZeroPowerBehavior((DcMotor.ZeroPowerBehavior.BRAKE));
         backLeftDrive.setZeroPowerBehavior((DcMotor.ZeroPowerBehavior.BRAKE));
 
@@ -105,22 +110,32 @@ ames have been configured on the robot:
 
 
         jewelSplit = hwMap.get (Servo.class, "js_Servo");
-        giLeft = hwMap.get (Servo.class, "gi_Left");
-        giRight = hwMap.get (Servo.class, "gi_Right");
+        //giLeft = hwMap.get (Servo.class, "gi_Left");
+        //giRight = hwMap.get (Servo.class, "gi_Right");
         liftLeft = hwMap.get (Servo.class, "lift_Left");
         liftRight = hwMap.get  (Servo.class, "lift_Right");
         phoneSpin = hwMap.get   (Servo.class,"phone_Spin");
         swivelArm = hwMap. get  (Servo.class, "swivel_Arm");
         //jewelColor = hwMap.get(NormalizedColorSensor.class, "js_Color");
 
+        glyphIntakeLeft= hwMap.get(DcMotor.class, "glyph_intake_left");
+        glyphIntakeRight= hwMap.get(DcMotor.class, "glyph_intake_right");
+        glyphBump = hwMap.get(DigitalChannel.class, "glyph_bump");
+
+
+        glyphBump.setMode(DigitalChannel.Mode.INPUT);
 
         //Set all servo to zero and another unknown number for the moment
         //jewelSplit.setPosition(1);
-        giRight.setPosition(.50);   // Stop Right
-        giLeft.setPosition(.50);    // giLeft.setPosition(.51);
+        //giRight.setPosition(.50);   // Stop Right
+        //giLeft.setPosition(.50);    // giLeft.setPosition(.51);
 
-        liftLeft.setPosition(.31);   // Set to servo 1bottom,
-        liftRight.setPosition(.34);    //Set to servo 2 bottom
+        //turn intake off
+        glyphIntakeLeft.setPower(0);
+        glyphIntakeRight.setPower(0);
+
+        liftLeft.setPosition(.68);   // Set to servo 1bottom,
+        liftRight.setPosition(.71);    //Set to servo 2 bottom
         jewelSplit.setPosition(1);
 
         phoneSpin.setPosition(.80);     //spins phone to left position

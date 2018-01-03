@@ -308,13 +308,13 @@ public class ForgeAutoBlueBackAll extends LinearOpMode {
 
 
         //release glyph
-        robot.giLeft.setPosition(.25);
-        robot.giRight.setPosition(.75);
-
+        robot.glyphIntakeLeft.setPower(-30);
+        robot.glyphIntakeLeft.setPower(-30);
         sleep(1500);
 
-        robot.giLeft.setPosition(.5); // Stop
-        robot.giRight.setPosition(.5); //Stop
+
+        robot.glyphIntakeLeft.setPower(0); //Stop
+        robot.glyphIntakeLeft.setPower(0); //Stop
 
 
         encoderDrive(.2, .75, -.75, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
