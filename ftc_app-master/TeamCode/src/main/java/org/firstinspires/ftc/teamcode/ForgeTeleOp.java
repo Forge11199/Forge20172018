@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.Range;
 
 /**
  * This file provides basic Telop driving for a Pushbot robot.
@@ -52,6 +53,7 @@ public class ForgeTeleOp extends OpMode{
 
     /* Declare OpMode members. */
     ForgeHW robot       = new ForgeHW(); // use the class created to define a Pushbot's hardware
+
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -102,6 +104,7 @@ public class ForgeTeleOp extends OpMode{
         left = -gamepad1.left_stick_y;
         right = -gamepad1.right_stick_y;
 
+
         robot.frontRightDrive.setPower(left);
         robot.frontLeftDrive.setPower(right);
         robot.backRightDrive.setPower(left);
@@ -119,6 +122,68 @@ public class ForgeTeleOp extends OpMode{
         if (gamepad1.dpad_left)     {       strafeLeft();       }
         if (gamepad1.dpad_up)       {       strafeForward();    }
         if (gamepad1.dpad_down)     {       strafeBack();       }
+
+        //close relic hand
+        if(gamepad1.left_trigger > 0)
+        {
+            robot.relicHand.setPosition(0);
+        }
+
+        //open relic hand
+        if(gamepad1.right_trigger > 0)
+        {
+            robot.relicHand.setPosition(.65);
+        }
+
+        // Control Relic Arm with sticks
+        double lowerBound =.10;
+        double upperBound =.90;
+        double increment =.1;
+        telemetry.addData("Trigger Right",gamepad1.right_trigger);
+        telemetry.addData("Trigger Left",gamepad1.right_trigger);
+
+
+
+        if (gamepad1.right_bumper)
+        {
+            double position;
+            position = robot.relicArm.getPosition();
+            telemetry.addData("Trigger Position",position);
+            telemetry.addData("Lower ",lowerBound);
+            telemetry.addData("greater",upperBound);
+
+
+            if (position > lowerBound && position < upperBound)
+            {
+                position = position + increment;
+                if (position > upperBound) // If over max, set to maximum
+                    {
+                        position = upperBound;
+                    }
+
+                robot.relicArm.setPosition(position);
+                sleep(300);
+            }
+            position = 0;
+        }
+
+
+        if (gamepad1.left_bumper)
+        {
+            double position;
+            position = robot.relicArm.getPosition();
+            if (position > lowerBound   && position < upperBound)
+            {
+                position = position - increment;
+                if (position < lowerBound) // If over max, set to maximum
+                {position = lowerBound;}
+
+                robot.relicArm.setPosition(position);
+                sleep(300);
+            }
+            position = 0;
+
+        }
 
         //Intake in
         if (gamepad2.y)
@@ -149,6 +214,7 @@ public class ForgeTeleOp extends OpMode{
         }
 
 
+
         if (gamepad2.dpad_up)
         {
             liftServoMax();
@@ -172,8 +238,8 @@ public class ForgeTeleOp extends OpMode{
 
         } else {
             telemetry.addData("Digital Touch", "Is Pressed");
-            robot.glyphIntakeRight.setPower(0);
-            robot.glyphIntakeLeft.setPower(0);
+            //robot.glyphIntakeRight.setPower(0);
+            //robot.glyphIntakeLeft.setPower(0);
         }
 
         telemetry.update();

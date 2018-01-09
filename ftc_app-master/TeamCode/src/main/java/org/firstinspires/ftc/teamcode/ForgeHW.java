@@ -51,6 +51,9 @@ ames have been configured on the robot:
     public Servo liftRight = null;
     public Servo phoneSpin = null;
     public Servo swivelArm  = null;
+    public Servo relicArm   = null;
+    public Servo relicHand   = null;
+
 
     public DcMotor glyphIntakeLeft          = null;
     public DcMotor glyphIntakeRight         = null;
@@ -112,6 +115,8 @@ ames have been configured on the robot:
         jewelSplit = hwMap.get (Servo.class, "js_Servo");
         //giLeft = hwMap.get (Servo.class, "gi_Left");
         //giRight = hwMap.get (Servo.class, "gi_Right");
+        relicArm = hwMap.get(Servo.class, "relic_Arm");
+        relicHand = hwMap.get(Servo.class, "relic_Hand");
         liftLeft = hwMap.get (Servo.class, "lift_Left");
         liftRight = hwMap.get  (Servo.class, "lift_Right");
         phoneSpin = hwMap.get   (Servo.class,"phone_Spin");
@@ -137,6 +142,9 @@ ames have been configured on the robot:
         liftLeft.setPosition(.68);   // Set to servo 1bottom,
         liftRight.setPosition(.71);    //Set to servo 2 bottom
         jewelSplit.setPosition(1);
+        relicArm.setPosition(.10);
+
+        //relicHand.setPosition(.65);
 
         phoneSpin.setPosition(.80);     //spins phone to left position
 
