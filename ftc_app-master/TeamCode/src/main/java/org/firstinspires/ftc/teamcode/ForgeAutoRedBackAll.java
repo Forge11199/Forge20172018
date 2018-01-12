@@ -101,8 +101,8 @@ public class ForgeAutoRedBackAll extends LinearOpMode {
     public void runOpMode() {
 
         robot.init(hardwareMap);
-        robot.swivelArm.setPosition(.80);
-        robot.jewelSplit.setPosition(.93);
+        robot.swivelArm.setPosition(.83);
+        robot.jewelSplit.setPosition(.95);
         robot.phoneSpin.setPosition(.40);
 
         // Wait for the game to start (driver presses PLAY)
@@ -205,7 +205,7 @@ public class ForgeAutoRedBackAll extends LinearOpMode {
             sleep(500);
             robot.swivelArm.setPosition(.77);
             sleep(1000);
-            robot.swivelArm.setPosition(.80);
+            robot.swivelArm.setPosition(.83);
             robot.jewelSplit.setPosition(.80);
             sleep(500);
             robot.jewelSplit.setPosition(.93);
@@ -216,13 +216,13 @@ public class ForgeAutoRedBackAll extends LinearOpMode {
             sleep(500);
             robot.swivelArm.setPosition(.83);
             sleep(1000);
-            robot.swivelArm.setPosition(.80);
+            robot.swivelArm.setPosition(.83);
             robot.jewelSplit.setPosition(.80);
             sleep(500);
             robot.jewelSplit.setPosition(.93);
 
         }
-        sleep(2000); // Wait for platform to stop shaking
+        sleep(1500); // Wait for platform to stop shaking
         // *** JEWEL PROCESS COMPLETE
 
         robot.frontRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -240,7 +240,7 @@ public class ForgeAutoRedBackAll extends LinearOpMode {
         telemetry.update();
 
 
-        sleep(3000);  // Pause to allow for viewing
+        sleep(2000);  // Pause to allow for viewing
 
         telemetry.addData("Current POS",  "Running at %7d :%7d :%7d :%7d",
                 robot.frontLeftDrive.getCurrentPosition(),
@@ -263,20 +263,20 @@ public class ForgeAutoRedBackAll extends LinearOpMode {
           //   encoderDrive(.2, 19, 17, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
           encoderDrive(.3, 16, 17.5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
           encoderDrive(.4, 6, -6, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-          encoderDrive(.3,6 , 6, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+          encoderDrive(.3,5.5 , 5.5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
 
-          sleep(2000);
+          sleep(1000);
           // Sorta Center = 18.5,17 @ .2
           // ??? 26/19
       }
 
        if (vuMark==RelicRecoveryVuMark.LEFT) {
          // Drive off platform
-           encoderDrive(.2, 16, 19, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+           encoderDrive(.2, 15, 19, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
            encoderDrive(.4,6 , -6, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-           encoderDrive(.2,5 , 5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+           encoderDrive(.2,4.5 , 4.5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
 
-           sleep(2000);
+           sleep(1000);
            // Sorta Center = 18.5,17 @ .2
        }
 
@@ -285,10 +285,10 @@ public class ForgeAutoRedBackAll extends LinearOpMode {
             // Drive off platform
             encoderDrive(.2, 16.00, 18.00, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
             encoderDrive(.2, -1.00, 1.00, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-            encoderDrive(.2, 1.50, 1.50, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+            encoderDrive(.2, 1.5, 1.5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
 
             //encoderDrive(.2, 3, 5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-            sleep(2000);
+            sleep(1000);
             // Sorta Center = 18.5,17 @ .2
         }
 
@@ -306,20 +306,20 @@ public class ForgeAutoRedBackAll extends LinearOpMode {
         robot.glyphIntakeLeft.setPower(-30);
         robot.glyphIntakeRight.setPower(-30);
 
-        sleep(1500);
+        sleep(1000);
 
         robot.glyphIntakeLeft.setPower(0); // Stop
         robot.glyphIntakeRight.setPower(0); //Stop
 
 
         encoderDrive(.2, .75, -.75, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        sleep(1000);
+        sleep(500);
 
         encoderDrive(.2, 1.0, 1.0, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        sleep(1000);
+        sleep(500);
 
-        encoderDrive(.2, -.5, -.5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        sleep(1000);
+        encoderDrive(.2, -1, -1, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        sleep(500);
 
         // Drive to Jewel box
             /*encoderDrive(.4, 26, 26, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout

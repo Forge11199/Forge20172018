@@ -101,8 +101,8 @@ public class ForgeAutoBlueFrontAll extends LinearOpMode {
     public void runOpMode() {
 
         robot.init(hardwareMap);
-        robot.swivelArm.setPosition(.80);
-        robot.jewelSplit.setPosition(.93);
+        robot.swivelArm.setPosition(.83);
+        robot.jewelSplit.setPosition(.95);
         robot.phoneSpin.setPosition(.40);
 
         // Wait for the game to start (driver presses PLAY)
@@ -206,7 +206,7 @@ public class ForgeAutoBlueFrontAll extends LinearOpMode {
             robot.swivelArm.setPosition(.77);
             sleep(1000);
             robot.swivelArm.setPosition(.80);
-            robot.jewelSplit.setPosition(.80);
+            robot.jewelSplit.setPosition(.83);
             sleep(500);
             robot.jewelSplit.setPosition(.93);
 
@@ -217,12 +217,12 @@ public class ForgeAutoBlueFrontAll extends LinearOpMode {
             robot.swivelArm.setPosition(.83);
             sleep(1000);
             robot.swivelArm.setPosition(.80);
-            robot.jewelSplit.setPosition(.80);
+            robot.jewelSplit.setPosition(.83);
             sleep(500);
             robot.jewelSplit.setPosition(.93);
 
         }
-        sleep(2000); // Wait for platform to stop shaking
+        sleep(1000); // Wait for platform to stop shaking
         // *** JEWEL PROCESS COMPLETE
 
         robot.frontRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -240,7 +240,7 @@ public class ForgeAutoBlueFrontAll extends LinearOpMode {
         telemetry.update();
 
 
-        sleep(3000);  // Pause to allow for viewing
+        sleep(1000);  // Pause to allow for viewing
 
         telemetry.addData("Current POS",  "Running at %7d :%7d :%7d :%7d",
                 robot.frontLeftDrive.getCurrentPosition(),
@@ -262,39 +262,42 @@ public class ForgeAutoBlueFrontAll extends LinearOpMode {
 
         // Back Off Plate
         encoderDrive(.3, -23.0, -23.00, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        sleep(1500);
+        sleep(1000);
 
-    /*
+
         // Turn to Right in Reverse
-        encoderDrive(.3, 29, -29, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(.3, -15, 15, 5.0);
 
 
         if (vuMark==RelicRecoveryVuMark.UNKNOWN ||vuMark==RelicRecoveryVuMark.CENTER) {
           // Drive off platform
           //   encoderDrive(.2, 19, 17, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-            encoderDrive(.3, -2.5, 2.5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-            encoderDrive(.3, 7, 7, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+            //encoderDrive(.3, -2.5, 2.5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
 
-          sleep(2000);
+            encoderDrive(.3, -3.0, 3.0, 5.0);  // S1: Forward 47 Inches with 5 Sec timeou
+            encoderDrive(.3, 4.5, 4.5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+
+          sleep(1000);
           // Sorta Center = 18.5,17 @ .2
           // ??? 26/19
       }
 
        if (vuMark==RelicRecoveryVuMark.LEFT) {
-         // Drive off platform
-           encoderDrive(.3, 4, 4, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+           encoderDrive(.3, -1, -1.0, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
 
-           sleep(2000);
+           encoderDrive(.3, 5.5, 5.5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+
+           sleep(1000);
            // Sorta Center = 18.5,17 @ .2
        }
 
 
         if (vuMark==RelicRecoveryVuMark.RIGHT) {
             // Drive off platform
-            encoderDrive(.3, -5, 5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-            encoderDrive(.3, 11, 11, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+            encoderDrive(.3,-5.0, 5.0, 5.0);  // S1: Forward 47 Inches with 5 Sec timeou
+            encoderDrive(.3, 5.5, 5.5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
 
-            sleep(2000);
+            sleep(1000);
             // Sorta Center = 18.5,17 @ .2
         }
 
@@ -306,7 +309,7 @@ public class ForgeAutoBlueFrontAll extends LinearOpMode {
         );
         telemetry.update();
 
-*/
+
 
         //release glyph
         robot.glyphIntakeLeft.setPower(-30);
@@ -324,7 +327,7 @@ public class ForgeAutoBlueFrontAll extends LinearOpMode {
         encoderDrive(.2, 1.0, 1.0, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
         sleep(1000);
 
-        encoderDrive(.2, -.5, -.5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(.2, -1, -1, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
         sleep(1000);
 
     }
