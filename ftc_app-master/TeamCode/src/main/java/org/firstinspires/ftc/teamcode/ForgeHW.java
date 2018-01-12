@@ -142,7 +142,7 @@ ames have been configured on the robot:
         liftLeft.setPosition(.68);   // Set to servo 1bottom,
         liftRight.setPosition(.71);    //Set to servo 2 bottom
         jewelSplit.setPosition(1);
-        relicArm.setPosition(.10);
+        //MOVED TO TELEOP relicArm.setPosition(.10);
 
         //relicHand.setPosition(.65);
 

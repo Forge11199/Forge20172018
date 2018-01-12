@@ -85,6 +85,7 @@ public class ForgeTeleOp extends OpMode{
     @Override
     public void start()
     {
+        robot.relicArm.setPosition(.10);
     }
 
     /*
@@ -118,33 +119,33 @@ public class ForgeTeleOp extends OpMode{
 
 
         // Strafe Without Encoders - TEST
-        if (gamepad1.dpad_right)    {       strafeRight();      }
-        if (gamepad1.dpad_left)     {       strafeLeft();       }
+        if (gamepad1.dpad_right)    {       strafeLeft();      }
+        if (gamepad1.dpad_left)     {       strafeRight();       }
         if (gamepad1.dpad_up)       {       strafeForward();    }
         if (gamepad1.dpad_down)     {       strafeBack();       }
 
         //close relic hand
-        if(gamepad1.left_trigger > 0)
+        if(gamepad2.left_trigger > 0)
         {
             robot.relicHand.setPosition(0);
         }
 
         //open relic hand
-        if(gamepad1.right_trigger > 0)
+        if(gamepad2.right_trigger > 0)
         {
             robot.relicHand.setPosition(.65);
         }
 
         // Control Relic Arm with sticks
         double lowerBound =.10;
-        double upperBound =.90;
-        double increment =.1;
+        double upperBound =.9;
+        double increment =.10;
         telemetry.addData("Trigger Right",gamepad1.right_trigger);
         telemetry.addData("Trigger Left",gamepad1.right_trigger);
 
 
 
-        if (gamepad1.right_bumper)
+        if (gamepad2.right_bumper)
         {
             double position;
             position = robot.relicArm.getPosition();
@@ -168,7 +169,7 @@ public class ForgeTeleOp extends OpMode{
         }
 
 
-        if (gamepad1.left_bumper)
+        if (gamepad2.left_bumper)
         {
             double position;
             position = robot.relicArm.getPosition();
